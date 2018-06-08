@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Kwad Spots</string>
+    <string name="title_home">Home</string>
+    <string name="title_spots">Spots</string>
+    <string name="title_search">Search</string>
+    <string name="activity_login_button">Login</string>
+    <string name="activity_login_username_hint">Username</string>
+    <string name="activity_login_password_hint">Password</string>
+</resources>
