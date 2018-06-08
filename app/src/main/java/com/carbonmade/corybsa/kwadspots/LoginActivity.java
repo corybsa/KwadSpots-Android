@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.carbonmade.corybsa.kwadspots.Navigation.MainActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

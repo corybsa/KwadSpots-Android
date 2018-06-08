@@ -1,20 +1,21 @@
-package com.carbonmade.corybsa.kwadspots;
+package com.carbonmade.corybsa.kwadspots.Navigation;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.LinearLayout;
+
+import com.carbonmade.corybsa.kwadspots.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.navigation) BottomNavigationView mNavigationView;
-    @BindView(R.id.main_content) LinearLayout mMainContentLayout;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -25,13 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
             switch(item.getItemId()) {
                 case R.id.navigation_home:
-                    loadLayout(R.layout.activity_main_home);
+                    loadFragment(new HomeFragment());
                     return true;
                 case R.id.navigation_spots:
-                    loadLayout(R.layout.activity_main_spots);
+                    loadFragment(new SpotsFragment());
                     return true;
                 case R.id.navigation_search:
-                    loadLayout(R.layout.activity_main_search);
+                    loadFragment(new SearchFragment());
                     return true;
             }
             return false;
@@ -44,13 +45,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        loadLayout(R.layout.activity_main_home);
+        loadFragment(new HomeFragment());
         mNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private void loadLayout(int layout) {
-        mMainContentLayout.removeAllViews();
-        View view = getLayoutInflater().inflate(layout, null);
-        mMainContentLayout.addView(view);
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.mainContent, fragment);
+        transaction.commit();
     }
 }
