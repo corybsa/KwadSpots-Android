@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dagger.android.AndroidInjection;
 
 public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.username) EditText mUsername;
@@ -26,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.login)
     void onLoginClick(View view) {
-        mPresenter.onLoginClicked(mUsername.getText().toString(), mPassword.getText().toString());
+//        mPresenter.onLoginClicked(mUsername.getText().toString(), mPassword.getText().toString());
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         finish();
         startActivity(intent);
@@ -34,10 +35,11 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        mPresenter.onAttach(this);
+//        mPresenter.onAttach(this);
     }
 }

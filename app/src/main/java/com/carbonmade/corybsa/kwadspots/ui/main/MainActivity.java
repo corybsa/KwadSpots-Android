@@ -1,5 +1,6 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,14 +9,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.navigation) BottomNavigationView mNavigationView;
@@ -42,11 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ((App)getApplication()).getAppComponent().inject(this);
-
         ButterKnife.bind(this);
 
         Fragment savedFragment = getSupportFragmentManager().findFragmentById(R.id.mainContent);
