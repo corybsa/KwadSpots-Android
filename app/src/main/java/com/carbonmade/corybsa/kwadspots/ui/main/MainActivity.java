@@ -1,6 +1,5 @@
-package com.carbonmade.corybsa.kwadspots.Navigation;
+package com.carbonmade.corybsa.kwadspots.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,7 +8,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
+import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
+import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
+import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            Intent intent;
-
             switch(item.getItemId()) {
                 case R.id.navigation_home:
                     loadFragment(new HomeFragment());
@@ -43,9 +44,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ((App)getApplication()).getAppComponent().inject(this);
+
         ButterKnife.bind(this);
 
-        loadFragment(new HomeFragment());
+        Fragment savedFragment = getSupportFragmentManager().findFragmentById(R.id.mainContent);
+
+        if(savedFragment == null) {
+            loadFragment(new HomeFragment());
+        } else {
+            loadFragment(savedFragment);
+        }
+        ;
         mNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
