@@ -1,33 +1,26 @@
 package com.carbonmade.corybsa.kwadspots;
 
-import android.app.Activity;
 import android.app.Application;
 
-import com.carbonmade.corybsa.kwadspots.di.DaggerAppComponent;
+import com.carbonmade.corybsa.kwadspots.di.AppModule;
+import com.carbonmade.corybsa.kwadspots.di.DaggerNetworkComponent;
+import com.carbonmade.corybsa.kwadspots.di.NetworkComponent;
+import com.carbonmade.corybsa.kwadspots.di.NetworkModule;
 
-import javax.inject.Inject;
-
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
-
-public class App extends Application implements HasActivityInjector {
-    @Inject
-    DispatchingAndroidInjector<Activity> mDispatchingAndroidInjector;
+public class App extends Application {
+    private NetworkComponent mNetworkComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        DaggerAppComponent
-                .builder()
-                .application(this)
-                .build()
-                .inject(this);
+        mNetworkComponent = DaggerNetworkComponent.builder()
+                .appModule(new AppModule(this))
+                .networkModule(new NetworkModule(""))
+                .build();
     }
 
-    @Override
-    public AndroidInjector<Activity> activityInjector() {
-        return mDispatchingAndroidInjector;
+    public NetworkComponent getNetworkComponent() {
+        return mNetworkComponent;
     }
 }

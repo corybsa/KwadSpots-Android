@@ -1,6 +1,8 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
-import android.content.Context;
+import android.app.Activity;
+import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,61 +11,57 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
-
-import javax.inject.Inject;
+import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsPresenter;
+import com.google.android.gms.location.LocationServices;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.AndroidInjection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainContract.View {
     @BindView(R.id.navigation) BottomNavigationView mNavigationView;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch(item.getItemId()) {
-                case R.id.navigation_home:
-                    loadFragment(new HomeFragment());
-                    return true;
-                case R.id.navigation_spots:
-                    loadFragment(new SpotsFragment());
-                    return true;
-                case R.id.navigation_search:
-                    loadFragment(new SearchFragment());
-                    return true;
-            }
-            return false;
-        }
-    };
+    private MainPresenter mPresenter;
+    private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Fragment savedFragment = getSupportFragmentManager().findFragmentById(R.id.mainContent);
+        ((App)getApplication()).getNetworkComponent().inject(this);
 
-        if(savedFragment == null) {
-            loadFragment(new HomeFragment());
-        } else {
-            loadFragment(savedFragment);
-        }
-        ;
-        mNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mPresenter = new MainPresenter(this);
+        mPresenter.getSavedFragment(R.id.mainContent);
+        mNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
-    private void loadFragment(Fragment fragment) {
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return mPresenter.onNavigation(item.getItemId());
+    }
+
+    public void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.mainContent, fragment);
         transaction.commit();
+        mFragment = fragment;
+    }
+
+    public void loadHomeFragment() {
+        loadFragment(new HomeFragment());
+    }
+
+    public void loadSpotsFragment() {
+        loadFragment(new SpotsFragment());
+    }
+
+    public void loadSearchFragment() {
+        loadFragment(new SearchFragment());
     }
 }

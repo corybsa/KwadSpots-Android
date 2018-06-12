@@ -1,17 +1,24 @@
 package com.carbonmade.corybsa.kwadspots.di;
 
-import android.content.Context;
+import android.app.Application;
 
-import com.carbonmade.corybsa.kwadspots.App;
 
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
 public class AppModule {
+    private Application mApplication;
+
+    public AppModule(Application application) {
+        mApplication = application;
+    }
+
     @Provides
-    Context provideContext(App application) {
-        return application.getApplicationContext();
+    @Singleton
+    Application providesApplication() {
+        return mApplication;
     }
 }

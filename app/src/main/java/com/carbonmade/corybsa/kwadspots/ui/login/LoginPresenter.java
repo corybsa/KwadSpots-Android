@@ -1,11 +1,24 @@
 package com.carbonmade.corybsa.kwadspots.ui.login;
 
-import com.carbonmade.corybsa.kwadspots.mvp.BasePresenter;
+public class LoginPresenter implements LoginContract.Presenter {
+    private LoginActivity mActivity;
 
-class LoginPresenter extends BasePresenter<LoginContract.View> implements LoginContract.Presenter {
-    LoginPresenter(LoginContract.View view) {
-        super(view);
+    public LoginPresenter(LoginActivity activity) {
+        mActivity = activity;
     }
 
+    @Override
+    public void onLoginClicked(String username, String password) {
+        // TODO: Remove this before prod release.
+        username = "test";
+        password = "test";
 
+        if(username.isEmpty()) {
+            mActivity.onLoginFailure("Username cannot be empty.");
+        } else if(password.isEmpty()) {
+            mActivity.onLoginFailure("Password cannot be empty.");
+        } else {
+            mActivity.onLoginSuccess();
+        }
+    }
 }

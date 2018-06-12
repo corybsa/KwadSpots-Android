@@ -12,13 +12,18 @@ import com.carbonmade.corybsa.kwadspots.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements SearchContract.Presenter {
     @BindView(R.id.searchView) SearchView mSearchView;
+
+    SearchPresenter mPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
+
+        mPresenter = new SearchPresenter(this);
+
         return view;
     }
 }
