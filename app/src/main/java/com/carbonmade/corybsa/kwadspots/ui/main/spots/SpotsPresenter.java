@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -28,7 +29,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
     public static final LatLng GET_FPV = new LatLng(27.3451935, -82.5385566);
     private static final long SECOND = 1000;
     private static final long LOCATION_UPDATE_INTERVAL = 30 * SECOND;
-    private static final long LOCATION_UPDATE_INTERVAL_FASTEST = 5 * SECOND;
+    private static final long LOCATION_UPDATE_INTERVAL_FASTEST = 15 * SECOND;
 
     private SpotsFragment mFragment;
     private Context mContext;
@@ -54,6 +55,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
                 }
 
                 // TODO: get spots close the the location
+                Toast.makeText(mContext, locationResult.toString(), Toast.LENGTH_LONG).show();
 
                 mRequestingLocationUpdates = true;
             }
