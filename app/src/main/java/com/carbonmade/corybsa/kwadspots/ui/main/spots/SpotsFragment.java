@@ -1,6 +1,8 @@
 package com.carbonmade.corybsa.kwadspots.ui.main.spots;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -38,7 +40,7 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
     private GoogleMap mGoogleMap;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_spots, container, false);
         ButterKnife.bind(this, view);
         ((App)getActivity().getApplication()).getNetworkComponent().inject(this);
@@ -47,7 +49,8 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
 
         mMapView.invalidate();
         mMapView.onCreate(savedInstanceState);
-        mMapView.getMapAsync(this);
+
+        loadMap();
 
         return view;
     }
@@ -60,11 +63,16 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
         mGoogleMap.setOnMarkerClickListener(mapListener);
         mPresenter.getCurrentLocation();
 
-        enableMyLocationIfPermitted();
-
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
         mGoogleMap.getUiSettings().setCompassEnabled(true);
+
+        if(
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        ) {
+            mGoogleMap.setMyLocationEnabled(true);
+        }
     }
 
     @Override
@@ -93,25 +101,43 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
             case PERMISSION_LOCATION_ACCESS_LOCATION:
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mPresenter.getCurrentLocation();
+                    mMapView.getMapAsync(this);
                 }
                 break;
         }
     }
 
-    private void enableMyLocationIfPermitted() {
+    private void loadMap() {
         if(
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
-            requestLocationPermissions();
+            if(
+                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+            ) {
+                new AlertDialog.Builder(requireContext())
+                        .setCancelable(true)
+                        .setTitle("Location permission necessary")
+                        .setMessage("We need your location to show you Spots in your area.")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                requestLocationPermissions();
+                            }
+                        })
+                        .show();
+            } else {
+                requestLocationPermissions();
+            }
         } else {
-            mGoogleMap.setMyLocationEnabled(true);
+            mMapView.getMapAsync(this);
         }
     }
 
     private void requestLocationPermissions() {
         String[] perms = { Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION };
-        ActivityCompat.requestPermissions(requireActivity(), perms, PERMISSION_LOCATION_ACCESS_LOCATION);
+        requestPermissions(perms, PERMISSION_LOCATION_ACCESS_LOCATION);
     }
 
     @Override
@@ -137,14 +163,10 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f));
     }
 
-    public void onLocationResolved(Location location) {
-        focusCurrentLocation(location);
-    }
-
     public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
         private SpotsFragment mSpotsFragment;
 
-        public MapListener(SpotsFragment fragment) {
+        MapListener(SpotsFragment fragment) {
             mSpotsFragment = fragment;
         }
 

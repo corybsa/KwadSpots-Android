@@ -87,7 +87,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
     @Override
     public void onSuccess(Location location) {
         if(location != null) {
-            mFragment.onLocationResolved(location);
+            mFragment.focusCurrentLocation(location);
         }
     }
 
