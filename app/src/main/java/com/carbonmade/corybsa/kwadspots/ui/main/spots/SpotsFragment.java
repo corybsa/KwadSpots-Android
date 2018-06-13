@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
@@ -53,7 +56,9 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Googl
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        mGoogleMap.setOnMapLongClickListener(this);
+        MapListener mapListener = new MapListener(this);
+        mGoogleMap.setOnMapLongClickListener(mapListener);
+        mGoogleMap.setOnMarkerClickListener(mapListener);
         mPresenter.getCurrentLocation();
 
         enableMyLocationIfPermitted();
@@ -146,5 +151,42 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Googl
 
     public void onLocationResolved(Location location) {
         focusCurrentLocation(location);
+    }
+
+    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+        private SpotsFragment mSpotsFragment;
+
+        public MapListener(SpotsFragment fragment) {
+            mSpotsFragment = fragment;
+        }
+
+        @Override
+        public void onMapLongClick(LatLng latLng) {
+            BottomSheetDialog sheet = new BottomSheetDialog(mSpotsFragment.requireContext());
+            View view = getLayoutInflater().inflate(R.layout.fragment_spots_actions, null);
+            sheet.setContentView(view);
+
+            Button button = (Button)view.findViewById(R.id.spots_actions_add_photo);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mSpotsFragment.getActivity(), "test", Toast.LENGTH_LONG).show();
+                }
+            });
+
+            sheet.show();
+
+            MarkerOptions options = new MarkerOptions()
+                    .position(latLng)
+                    .title("Test");
+            Marker marker = drawMarker(options);
+        }
+
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            Toast.makeText(mSpotsFragment.getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 }

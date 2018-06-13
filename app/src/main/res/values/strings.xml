@@ -6,4 +6,7 @@
     <string name="activity_login_button">Login</string>
     <string name="activity_login_username_hint">Username</string>
     <string name="activity_login_password_hint">Password</string>
+
+    <string name="spots_actions_add_photo">Add Photo</string>
+    <string name="spots_actions_add_something">Add Another Thing</string>
 </resources>
