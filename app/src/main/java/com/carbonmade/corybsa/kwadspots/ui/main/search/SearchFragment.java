@@ -19,7 +19,7 @@ public class SearchFragment extends Fragment implements SearchContract.Presenter
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
 
         mPresenter = new SearchPresenter(this);

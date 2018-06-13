@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1071512360337-eed1uago8ag00h3ho9m7akvbinukuifp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carbonmade.corybsa.kwadspots",
+            "certificate_hash": "138983549b6a37f1b2b2c840d1006a2dd4b7cc3d"
+          }
+        },
+        {
           "client_id": "1071512360337-pb1glnp79frdqt21ehpip9cphmbt6mff.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -46,6 +54,13 @@
             {
               "client_id": "1071512360337-l70v85dmo1jh19gktvumrj49ma4c3dvl.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1071512360337-lqa1p66mjp16l4lhdo3vdr5av0u8fuk9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.donlops.kwadSpots"
+              }
             }
           ]
         },

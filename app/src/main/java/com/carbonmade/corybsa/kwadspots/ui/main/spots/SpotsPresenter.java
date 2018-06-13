@@ -9,7 +9,6 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -55,7 +54,6 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
                 }
 
                 // TODO: get spots close the the location
-                Toast.makeText(mContext, locationResult.toString(), Toast.LENGTH_LONG).show();
 
                 mRequestingLocationUpdates = true;
             }

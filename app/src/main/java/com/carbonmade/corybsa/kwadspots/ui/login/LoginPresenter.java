@@ -9,16 +9,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void onLoginClicked(String username, String password) {
-        // TODO: Remove this before prod release.
-        username = "test";
-        password = "test";
+        // TODO: Add actual auth logic.
 
-        if(username.isEmpty()) {
-            mActivity.onLoginFailure("Username cannot be empty.");
-        } else if(password.isEmpty()) {
-            mActivity.onLoginFailure("Password cannot be empty.");
-        } else {
-            mActivity.onLoginSuccess();
-        }
+        mActivity.onLoginSuccess();
     }
 }
