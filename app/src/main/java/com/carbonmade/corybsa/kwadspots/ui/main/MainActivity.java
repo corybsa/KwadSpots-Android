@@ -1,8 +1,5 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,8 +13,6 @@ import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
-import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsPresenter;
-import com.google.android.gms.location.LocationServices;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +21,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @BindView(R.id.navigation) BottomNavigationView mNavigationView;
 
     private MainPresenter mPresenter;
-    private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.mainContent, fragment);
         transaction.commit();
-        mFragment = fragment;
     }
 
     public void loadHomeFragment() {
