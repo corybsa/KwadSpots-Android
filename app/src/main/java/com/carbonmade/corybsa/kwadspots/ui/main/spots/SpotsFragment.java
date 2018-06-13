@@ -6,7 +6,6 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,7 +29,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SpotsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener, SpotsContract.View {
+public class SpotsFragment extends Fragment implements OnMapReadyCallback, SpotsContract.View {
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
 
     @BindView(R.id.mapView) MapView mMapView;
@@ -66,17 +65,6 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Googl
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
         mGoogleMap.getUiSettings().setCompassEnabled(true);
-    }
-
-    @Override
-    public void onMapLongClick(LatLng latLng) {
-        DialogFragment fragment = new DialogFragment();
-
-        MarkerOptions options = new MarkerOptions()
-                .position(latLng)
-                .title("");
-
-        Marker marker = drawMarker(options);
     }
 
     @Override

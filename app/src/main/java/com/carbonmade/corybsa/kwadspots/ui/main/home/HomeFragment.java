@@ -1,5 +1,6 @@
 package com.carbonmade.corybsa.kwadspots.ui.main.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,12 +11,26 @@ import android.widget.TextView;
 
 import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
+import com.carbonmade.corybsa.kwadspots.ui.login.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class HomeFragment extends Fragment implements HomeContract.Presenter {
     @BindView(R.id.homeText) TextView mTextView;
+
+    @Inject FirebaseAuth mAuth;
+
+    @OnClick(R.id.button)
+    void onClick(View view) {
+        mAuth.signOut();
+        Intent intent = new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
+    }
 
     HomePresenter mPresenter;
 

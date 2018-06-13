@@ -4,9 +4,12 @@
     <string name="title_spots">Spots</string>
     <string name="title_search">Search</string>
     <string name="activity_login_button">Login</string>
-    <string name="activity_login_username_hint">Username</string>
-    <string name="activity_login_password_hint">Password</string>
+    <string name="edit_text_email_hint">Email</string>
+    <string name="edit_text_password_hint">Password</string>
 
     <string name="spots_actions_add_photo">Add Photo</string>
     <string name="spots_actions_add_something">Add Another Thing</string>
+    <string name="kwad_spots">Kwad Spots</string>
+    <string name="no_account">No account? Sign up here.</string>
+    <string name="sign_up_button">Sign Up</string>
 </resources>

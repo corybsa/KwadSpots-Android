@@ -1,5 +1,6 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,11 +15,16 @@ import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainContract.View {
     @BindView(R.id.navigation) BottomNavigationView mNavigationView;
+
+    @Inject
+    SharedPreferences mPreferences;
 
     private MainPresenter mPresenter;
 

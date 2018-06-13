@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
 
 import butterknife.BindView;
@@ -21,6 +22,7 @@ public class SearchFragment extends Fragment implements SearchContract.Presenter
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
+        ((App)getActivity().getApplication()).getNetworkComponent().inject(this);
 
         mPresenter = new SearchPresenter(this);
 

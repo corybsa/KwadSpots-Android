@@ -8,5 +8,6 @@ interface LoginContract {
 
     interface Presenter {
         void onLoginClicked(String username, String password);
+        void onResume();
     }
 }
