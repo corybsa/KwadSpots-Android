@@ -73,6 +73,13 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
     }
 
     @Override
+    public void onDestroy() {
+        stopLocationUpdates();
+        mLocationRequest = null;
+        mLocationCallback = null;
+    }
+
+    @Override
     public void getCurrentLocation() {
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
         SettingsClient client = LocationServices.getSettingsClient(mContext);
@@ -119,6 +126,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
 
     private void stopLocationUpdates() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+        mRequestingLocationUpdates = false;
     }
 
     private class LocationResolver implements OnSuccessListener<LocationSettingsResponse>, OnFailureListener {

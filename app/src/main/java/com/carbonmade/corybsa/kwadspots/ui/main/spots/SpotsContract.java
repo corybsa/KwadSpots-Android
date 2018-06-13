@@ -15,5 +15,6 @@ interface SpotsContract {
         void getCurrentLocation();
         void onPause();
         void onResume();
+        void onDestroy();
     }
 }

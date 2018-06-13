@@ -94,6 +94,7 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
     public void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        mPresenter.onDestroy();
     }
 
     @Override
