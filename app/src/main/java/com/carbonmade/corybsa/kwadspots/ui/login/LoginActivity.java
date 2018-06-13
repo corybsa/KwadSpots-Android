@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
@@ -56,6 +59,24 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         ((App)getApplication()).getNetworkComponent().inject(this);
 
         mPresenter = new LoginPresenter(this);
+
+        mPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if(keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                    switch(keyCode) {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            onLoginClick(null);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                return false;
+            }
+        });
     }
 
     @Override
