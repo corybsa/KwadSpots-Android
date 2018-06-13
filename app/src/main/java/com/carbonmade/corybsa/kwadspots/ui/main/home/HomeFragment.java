@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.ui.login.LoginActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
@@ -22,6 +24,7 @@ import butterknife.OnClick;
 
 public class HomeFragment extends Fragment implements HomeContract.Presenter {
     @BindView(R.id.homeText) TextView mTextView;
+    @BindView(R.id.adView) AdView mAdView;
 
     @Inject FirebaseAuth mAuth;
 
@@ -41,6 +44,9 @@ public class HomeFragment extends Fragment implements HomeContract.Presenter {
         ((App)getActivity().getApplication()).getNetworkComponent().inject(this);
 
         mPresenter = new HomePresenter(this);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         return view;
     }
