@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "1071512360337",
+    "firebase_url": "https://kwad-spots.firebaseio.com",
+    "project_id": "kwad-spots",
+    "storage_bucket": "kwad-spots.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071512360337:android:905f689bbea19f99",
+        "android_client_info": {
+          "package_name": "com.carbonmade.corybsa.kwadspots"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071512360337-pb1glnp79frdqt21ehpip9cphmbt6mff.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carbonmade.corybsa.kwadspots",
+            "certificate_hash": "2b2960a748197502a452b59f652270a15e3b3506"
+          }
+        },
+        {
+          "client_id": "1071512360337-l70v85dmo1jh19gktvumrj49ma4c3dvl.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1071512360337-l70v85dmo1jh19gktvumrj49ma4c3dvl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZGOlaCT6Qcs57E1ve1UQyuYqoybUZ5oM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071512360337-l70v85dmo1jh19gktvumrj49ma4c3dvl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
