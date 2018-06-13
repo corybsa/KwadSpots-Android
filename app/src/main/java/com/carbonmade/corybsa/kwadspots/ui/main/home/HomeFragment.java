@@ -23,6 +23,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HomeFragment extends Fragment implements HomeContract.Presenter {
+    public static final String CLASS_NAME = HomeFragment.class.getSimpleName();
+
     @BindView(R.id.homeText) TextView mTextView;
     @BindView(R.id.adView) AdView mAdView;
 

@@ -32,6 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SpotsFragment extends Fragment implements OnMapReadyCallback, SpotsContract.View {
+    public static final String CLASS_NAME = SpotsFragment.class.getSimpleName();
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
 
     @BindView(R.id.mapView) MapView mMapView;

@@ -14,6 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SearchFragment extends Fragment implements SearchContract.Presenter {
+    public static final String CLASS_NAME = SearchFragment.class.getSimpleName();
+
     @BindView(R.id.searchView) SearchView mSearchView;
 
     SearchPresenter mPresenter;
