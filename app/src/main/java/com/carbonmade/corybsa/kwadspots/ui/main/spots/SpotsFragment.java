@@ -69,8 +69,8 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
         mGoogleMap.getUiSettings().setCompassEnabled(true);
 
         if(
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         ) {
             mGoogleMap.setMyLocationEnabled(true);
         }
@@ -111,14 +111,14 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
 
     private void loadMap() {
         if(
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
             if(
-                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
             ) {
-                new AlertDialog.Builder(requireContext())
+                new AlertDialog.Builder(getContext())
                         .setCancelable(true)
                         .setTitle("Location permission necessary")
                         .setMessage("We need your location to show you Spots in your area.")
@@ -174,7 +174,7 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
 
         @Override
         public void onMapLongClick(LatLng latLng) {
-            BottomSheetDialog sheet = new BottomSheetDialog(mSpotsFragment.requireContext());
+            BottomSheetDialog sheet = new BottomSheetDialog(mSpotsFragment.getContext());
             View view = getLayoutInflater().inflate(R.layout.fragment_spots_actions, null);
             sheet.setContentView(view);
 

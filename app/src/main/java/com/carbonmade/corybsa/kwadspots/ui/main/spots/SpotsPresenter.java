@@ -39,7 +39,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
 
     SpotsPresenter(SpotsFragment fragment) {
         mFragment = fragment;
-        mContext = mFragment.requireContext();
+        mContext = mFragment.getContext();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(LOCATION_UPDATE_INTERVAL);
