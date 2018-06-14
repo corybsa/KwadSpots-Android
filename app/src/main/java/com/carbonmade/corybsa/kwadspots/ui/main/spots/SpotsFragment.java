@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
+import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,25 +29,31 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerFragment;
 
-public class SpotsFragment extends Fragment implements OnMapReadyCallback, SpotsContract.View {
-    public static final String CLASS_NAME = SpotsFragment.class.getSimpleName();
+@ActivityScoped
+public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback, SpotsContract.View {
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
 
     @BindView(R.id.mapView) MapView mMapView;
 
-    private SpotsPresenter mPresenter;
+    @Inject SpotsPresenter mPresenter;
+
     private GoogleMap mGoogleMap;
+
+    @Inject
+    public SpotsFragment() {}
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_spots, container, false);
         ButterKnife.bind(this, view);
-        ((App)getActivity().getApplication()).getNetworkComponent().inject(this);
 
-        mPresenter = new SpotsPresenter(this);
+        mPresenter.takeView(this);
 
         mMapView.invalidate();
         mMapView.onCreate(savedInstanceState);
@@ -69,8 +76,8 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
         mGoogleMap.getUiSettings().setCompassEnabled(true);
 
         if(
-            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         ) {
             mGoogleMap.setMyLocationEnabled(true);
         }
@@ -111,14 +118,14 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
 
     private void loadMap() {
         if(
-            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
             if(
-                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
             ) {
-                new AlertDialog.Builder(getContext())
+                new AlertDialog.Builder(requireContext())
                         .setCancelable(true)
                         .setTitle("Location permission necessary")
                         .setMessage("We need your location to show you Spots in your area.")
@@ -160,6 +167,11 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
         return null;
     }
 
+    @Override
+    public SpotsFragment getFragment() {
+        return this;
+    }
+
     public void focusCurrentLocation(Location location) {
         LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f));
@@ -174,7 +186,7 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
 
         @Override
         public void onMapLongClick(LatLng latLng) {
-            BottomSheetDialog sheet = new BottomSheetDialog(mSpotsFragment.getContext());
+            BottomSheetDialog sheet = new BottomSheetDialog(mSpotsFragment.requireContext());
             View view = getLayoutInflater().inflate(R.layout.fragment_spots_actions, null);
             sheet.setContentView(view);
 
@@ -183,7 +195,7 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mSpotsFragment.getActivity(), "test", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mSpotsFragment.requireActivity(), "test", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -197,7 +209,7 @@ public class SpotsFragment extends Fragment implements OnMapReadyCallback, Spots
 
         @Override
         public boolean onMarkerClick(Marker marker) {
-            Toast.makeText(mSpotsFragment.getActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mSpotsFragment.requireActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
         }
     }

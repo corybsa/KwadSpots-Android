@@ -1,28 +1,34 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
+import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 
 import com.carbonmade.corybsa.kwadspots.R;
+import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 
+import javax.inject.Inject;
+
+@ActivityScoped
 public class MainPresenter implements MainContract.Presenter {
-    private MainActivity mActivity;
+    private MainContract.View mMainView;
 
-    public MainPresenter(MainActivity activity) {
-        mActivity = activity;
+    @Inject
+    MainPresenter() {
+
     }
 
     @Override
     public boolean onNavigation(@IdRes int id) {
         switch(id) {
             case R.id.navigation_home:
-                mActivity.loadHomeFragment();
+                mMainView.loadHomeFragment();
                 return true;
             case R.id.navigation_spots:
-                mActivity.loadSpotsFragment();
+                mMainView.loadSpotsFragment();
                 return true;
             case R.id.navigation_search:
-                mActivity.loadSearchFragment();
+                mMainView.loadSearchFragment();
                 return true;
         }
 
@@ -30,13 +36,43 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void getSavedFragment(@IdRes int id) {
-        Fragment fragment = mActivity.getSupportFragmentManager().findFragmentById(id);
+    public void onCreate() {
+        Fragment fragment = mMainView.getMainFragmentManager().findFragmentById(R.id.mainContent);
 
         if(fragment == null) {
-            mActivity.loadHomeFragment();
+            mMainView.loadHomeFragment();
         } else {
-            mActivity.loadFragment(fragment);
+            mMainView.loadFragment(fragment);
         }
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        String fragment = savedInstanceState.getString(MainActivity.KEY_FRAGMENT);
+
+        switch(fragment) {
+            case "HomeFragment":
+                mMainView.loadHomeFragment();
+                break;
+            case "SearchFragment":
+                mMainView.loadSearchFragment();
+                break;
+            case "SpotsFragment":
+                mMainView.loadSpotsFragment();
+                break;
+            default:
+                mMainView.loadHomeFragment();
+                break;
+        }
+    }
+
+    @Override
+    public void takeView(MainContract.View view) {
+        mMainView = view;
+    }
+
+    @Override
+    public void dropView() {
+        mMainView = null;
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -19,16 +20,19 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.Lazy;
+import dagger.android.support.DaggerAppCompatActivity;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainContract.View {
-    private static final String KEY_FRAGMENT = "Fragment";
+public class MainActivity extends DaggerAppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainContract.View {
+    protected static final String KEY_FRAGMENT = "Fragment";
 
     @BindView(R.id.navigation) BottomNavigationView mNavigationView;
 
-    @Inject
-    SharedPreferences mPreferences;
+    @Inject MainPresenter mPresenter;
+    @Inject Lazy<HomeFragment> mHomeFragmentProvider;
+    @Inject Lazy<SearchFragment> mSearchFragmentProvider;
+    @Inject Lazy<SpotsFragment> mSpotsFragmentProvider;
 
-    private MainPresenter mPresenter;
     private Fragment mFragment;
 
     @Override
@@ -37,10 +41,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        ((App)getApplication()).getNetworkComponent().inject(this);
-
-        mPresenter = new MainPresenter(this);
-        mPresenter.getSavedFragment(R.id.mainContent);
+        mPresenter.takeView(this);
+        mPresenter.onCreate();
         mNavigationView.setOnNavigationItemSelectedListener(this);
     }
 
@@ -52,22 +54,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String fragment = savedInstanceState.getString(KEY_FRAGMENT);
-
-        switch(fragment) {
-            case "HomeFragment":
-                loadHomeFragment();
-                break;
-            case "SearchFragment":
-                loadSearchFragment();
-                break;
-            case "SpotsFragment":
-                loadSpotsFragment();
-                break;
-            default:
-                loadHomeFragment();
-                break;
-        }
+        mPresenter.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -76,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         outState.putString(KEY_FRAGMENT, mFragment.getClass().getSimpleName());
     }
 
+
+    @Override
     public void loadFragment(Fragment fragment) {
         mFragment = fragment;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -83,15 +72,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         transaction.commit();
     }
 
+    @Override
     public void loadHomeFragment() {
-        loadFragment(new HomeFragment());
+        loadFragment(mHomeFragmentProvider.get());
     }
 
+    @Override
     public void loadSpotsFragment() {
-        loadFragment(new SpotsFragment());
+        loadFragment(mSpotsFragmentProvider.get());
     }
 
+    @Override
     public void loadSearchFragment() {
-        loadFragment(new SearchFragment());
+        loadFragment(mSearchFragmentProvider.get());
+    }
+
+
+    @Override
+    public FragmentManager getMainFragmentManager() {
+        return getSupportFragmentManager();
     }
 }

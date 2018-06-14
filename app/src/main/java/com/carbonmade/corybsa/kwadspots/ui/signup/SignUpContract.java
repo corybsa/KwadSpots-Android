@@ -1,12 +1,15 @@
 package com.carbonmade.corybsa.kwadspots.ui.signup;
 
+import com.carbonmade.corybsa.kwadspots.ui.BasePresenter;
+import com.carbonmade.corybsa.kwadspots.ui.BaseView;
+
 interface SignUpContract {
-    interface View {
+    interface View extends BaseView<Presenter> {
         void onAccountCreated();
         void onAccountFailed(String message);
     }
 
-    interface Presenter {
-        void onSignUpClicked(String email, String password);
+    interface Presenter extends BasePresenter<View> {
+        void onSignUpClicked(String email, String password, String verifyPassword);
     }
 }

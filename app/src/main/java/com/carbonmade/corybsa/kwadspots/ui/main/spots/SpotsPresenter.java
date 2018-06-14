@@ -1,6 +1,7 @@
 package com.carbonmade.corybsa.kwadspots.ui.main.spots;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -10,6 +11,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
+import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
+import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -24,22 +27,27 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import javax.inject.Inject;
+
+@ActivityScoped
 public class SpotsPresenter implements SpotsContract.Presenter, LocationListener, OnSuccessListener<Location> {
     public static final LatLng GET_FPV = new LatLng(27.3451935, -82.5385566);
     private static final long SECOND = 1000;
     private static final long LOCATION_UPDATE_INTERVAL = 30 * SECOND;
     private static final long LOCATION_UPDATE_INTERVAL_FASTEST = 15 * SECOND;
 
-    private SpotsFragment mFragment;
-    private Context mContext;
+    private SpotsContract.View mSpotsView;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
     private boolean mRequestingLocationUpdates;
+    private Context mContext;
+    private Activity mActivity;
 
-    SpotsPresenter(SpotsFragment fragment) {
-        mFragment = fragment;
-        mContext = mFragment.getContext();
+    @Inject
+    SpotsPresenter(Context context, MainActivity activity) {
+        mContext = context;
+        mActivity = activity;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(LOCATION_UPDATE_INTERVAL);
@@ -94,7 +102,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
     @Override
     public void onSuccess(Location location) {
         if(location != null) {
-            mFragment.focusCurrentLocation(location);
+            mSpotsView.focusCurrentLocation(location);
         }
     }
 
@@ -129,6 +137,16 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
         mRequestingLocationUpdates = false;
     }
 
+    @Override
+    public void takeView(SpotsContract.View view) {
+        mSpotsView = view;
+    }
+
+    @Override
+    public void dropView() {
+        mSpotsView = null;
+    }
+
     private class LocationResolver implements OnSuccessListener<LocationSettingsResponse>, OnFailureListener {
         @Override
         public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
@@ -142,11 +160,13 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
             if (e instanceof ResolvableApiException) {
                 try {
                     ResolvableApiException resolvable = (ResolvableApiException) e;
-                    resolvable.startResolutionForResult(mFragment.getActivity(), 6);
+                    resolvable.startResolutionForResult(mActivity, 6);
                 } catch (IntentSender.SendIntentException sendEx) {
                     // Ignore the error.
                 }
             }
         }
     }
+
+
 }

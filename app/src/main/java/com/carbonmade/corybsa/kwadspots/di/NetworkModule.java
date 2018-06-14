@@ -1,8 +1,6 @@
 package com.carbonmade.corybsa.kwadspots.di;
 
 import android.app.Application;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,11 +21,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 @Module
 public class NetworkModule {
-    private String mBaseUrl;
-
-    public NetworkModule(String baseUrl) {
-        mBaseUrl = baseUrl;
-    }
+    private static final String mBaseUrl = "";
 
     @Provides
     @Singleton

@@ -1,16 +1,21 @@
 <resources>
     <string name="app_name">Kwad Spots</string>
-    <string name="title_home">Home</string>
-    <string name="title_spots">Spots</string>
-    <string name="title_search">Search</string>
-    <string name="activity_login_button">Login</string>
+
+    <string name="main_tab_home">Home</string>
+    <string name="main_tab_search">Search</string>
+    <string name="main_tab_spots">Spots</string>
+
+    <string name="text_log_in">Log In</string>
+    <string name="text_log_out">Log Out</string>
+    <string name="text_kwad_spots">Kwad Spots</string>
+    <string name="text_no_account">No account? Sign up here.</string>
+    <string name="text_sign_up">Sign Up</string>
+
     <string name="edit_text_email_hint">Email</string>
     <string name="edit_text_password_hint">Password</string>
+    <string name="edit_text_password_verify_hint">Verify Password</string>
 
     <string name="spots_actions_add_photo">Add Photo</string>
     <string name="spots_actions_add_something">Add Another Thing</string>
-    <string name="kwad_spots">Kwad Spots</string>
-    <string name="no_account">No account? Sign up here.</string>
-    <string name="sign_up_button">Sign Up</string>
-    <string name="banner_ad_unit_id">ca-app-pub-6495972434946757/1608122610</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

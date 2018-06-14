@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 
-@Singleton
+/*@Singleton
 @Component(modules = {AppModule.class, NetworkModule.class})
 public interface NetworkComponent {
     // Activities
@@ -23,4 +23,4 @@ public interface NetworkComponent {
     void inject(HomeFragment fragment);
     void inject(SpotsFragment fragment);
     void inject(SearchFragment fragment);
-}
+}*/

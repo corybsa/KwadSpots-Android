@@ -1,9 +1,25 @@
 package com.carbonmade.corybsa.kwadspots.ui.main.search;
 
-public class SearchPresenter implements SearchContract.Presenter {
-    SearchFragment mFragment;
+import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 
-    public SearchPresenter(SearchFragment fragment) {
-        mFragment = fragment;
+import javax.inject.Inject;
+
+@ActivityScoped
+public class SearchPresenter implements SearchContract.Presenter {
+    private SearchContract.View mSearchView;
+
+    @Inject
+    public SearchPresenter() {
+
+    }
+
+    @Override
+    public void takeView(SearchContract.View view) {
+        mSearchView = view;
+    }
+
+    @Override
+    public void dropView() {
+        mSearchView = null;
     }
 }

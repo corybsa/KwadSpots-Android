@@ -1,19 +1,14 @@
 package com.carbonmade.corybsa.kwadspots.ui.login;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.ui.signup.SignUpActivity;
@@ -24,20 +19,19 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dagger.android.support.DaggerAppCompatActivity;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View {
-    private static final String KEY_EMAIL = "Email";
-    private static final String KEY_PASSWORD = "Password";
+public class LoginActivity extends DaggerAppCompatActivity implements LoginContract.View {
+    private static final String KEY_EMAIL = "Log in email";
+    private static final String KEY_PASSWORD = "Log in password";
 
     @BindView(R.id.email) EditText mEmail;
     @BindView(R.id.password) EditText mPassword;
     @BindView(R.id.login) Button mLogin;
     @BindView(R.id.signUp) TextView mSignUp;
 
-    @Inject SharedPreferences mSharedPreferences;
     @Inject FirebaseAuth mAuth;
-
-    private LoginPresenter mPresenter;
+    @Inject LoginPresenter mPresenter;
 
     @OnClick(R.id.login)
     void onLoginClick(View view) {
@@ -56,9 +50,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        ((App)getApplication()).getNetworkComponent().inject(this);
-
-        mPresenter = new LoginPresenter(this);
+        mPresenter.takeView(this);
 
         mPassword.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -106,9 +98,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void onLoginSuccess() {
+        mPresenter.dropView();
         Intent intent = new Intent(getBaseContext(), MainActivity.class);
         finish();
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -118,9 +112,5 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                 .setPositiveButton("Ok", null)
                 .create()
                 .show();
-    }
-
-    public FirebaseAuth getAuth() {
-        return mAuth;
     }
 }
