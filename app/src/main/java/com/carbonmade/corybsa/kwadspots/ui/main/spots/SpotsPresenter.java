@@ -53,7 +53,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
                     return;
                 }
 
-                // TODO: get spots close the the location
+                // TODO: get spots close to the location
 
                 mRequestingLocationUpdates = true;
             }
