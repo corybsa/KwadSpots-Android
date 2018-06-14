@@ -2,13 +2,16 @@ package com.carbonmade.corybsa.kwadspots.ui.main.spots;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.carbonmade.corybsa.kwadspots.App;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,11 +41,12 @@ import dagger.android.support.DaggerFragment;
 public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback, SpotsContract.View {
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
 
-    @BindView(R.id.mapView) MapView mMapView;
+    @BindView(R.id.map_view) MapView mMapView;
 
     @Inject SpotsPresenter mPresenter;
 
     private GoogleMap mGoogleMap;
+    protected BottomSheetDialog mBottomSheetDialog;
 
     @Inject
     public SpotsFragment() {}
@@ -95,6 +98,10 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         super.onPause();
         mMapView.onPause();
         mPresenter.onPause();
+
+        if(mBottomSheetDialog != null) {
+            mBottomSheetDialog.dismiss();
+        }
     }
 
     @Override
@@ -102,6 +109,10 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         super.onDestroy();
         mMapView.onDestroy();
         mPresenter.onDestroy();
+
+        if(mBottomSheetDialog != null) {
+            mBottomSheetDialog.dismiss();
+        }
     }
 
     @Override
@@ -186,9 +197,11 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public void onMapLongClick(LatLng latLng) {
-            BottomSheetDialog sheet = new BottomSheetDialog(mSpotsFragment.requireContext());
+            vibrate(80);
+
+            mSpotsFragment.mBottomSheetDialog = new BottomSheetDialog(mSpotsFragment.requireContext());
             View view = getLayoutInflater().inflate(R.layout.fragment_spots_actions, null);
-            sheet.setContentView(view);
+            mSpotsFragment.mBottomSheetDialog.setContentView(view);
 
             Button button = (Button)view.findViewById(R.id.spots_actions_add_photo);
 
@@ -199,7 +212,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
                 }
             });
 
-            sheet.show();
+            mSpotsFragment.mBottomSheetDialog.show();
 
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
@@ -211,6 +224,18 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         public boolean onMarkerClick(Marker marker) {
             Toast.makeText(mSpotsFragment.requireActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
             return false;
+        }
+
+        private void vibrate(long duration) {
+            Vibrator vibrator = (Vibrator)SpotsFragment.this.requireActivity().getSystemService(Context.VIBRATOR_SERVICE);
+
+            if(vibrator != null && vibrator.hasVibrator()) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(duration, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(duration);
+                }
+            }
         }
     }
 }

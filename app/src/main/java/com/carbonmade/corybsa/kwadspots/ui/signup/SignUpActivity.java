@@ -29,7 +29,7 @@ public class SignUpActivity extends DaggerAppCompatActivity implements SignUpCon
     @Inject FirebaseAuth mAuth;
     @Inject SignUpPresenter mPresenter;
 
-    @OnClick(R.id.signUp)
+    @OnClick(R.id.sign_up)
     void onSignUpClick(View view) {
         mPresenter.onSignUpClicked(
                 mEmail.getText().toString(),

@@ -54,18 +54,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
         mLocationRequest.setFastestInterval(LOCATION_UPDATE_INTERVAL_FASTEST);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if(locationResult == null) {
-                    return;
-                }
-
-                // TODO: get spots close to the location
-
-                mRequestingLocationUpdates = true;
-            }
-        };
+        initLocationListener();
     }
 
     @Override
@@ -75,6 +64,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
 
     @Override
     public void onResume() {
+        initLocationListener();
         if(!mRequestingLocationUpdates) {
             startLocationUpdates();
         }
@@ -126,6 +116,16 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
 
     }
 
+    @Override
+    public void takeView(SpotsContract.View view) {
+        mSpotsView = view;
+    }
+
+    @Override
+    public void dropView() {
+        mSpotsView = null;
+    }
+
     private void startLocationUpdates() {
         if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
@@ -137,14 +137,21 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
         mRequestingLocationUpdates = false;
     }
 
-    @Override
-    public void takeView(SpotsContract.View view) {
-        mSpotsView = view;
-    }
+    private void initLocationListener() {
+        if(mLocationCallback == null) {
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if(locationResult == null) {
+                        return;
+                    }
 
-    @Override
-    public void dropView() {
-        mSpotsView = null;
+                    // TODO: get spots close to the location
+
+                    mRequestingLocationUpdates = true;
+                }
+            };
+        }
     }
 
     private class LocationResolver implements OnSuccessListener<LocationSettingsResponse>, OnFailureListener {

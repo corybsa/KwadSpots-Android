@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/ks_logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -19,13 +19,13 @@
         android:contentDescription="@string/text_kwad_spots" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_username"
+        android:id="@+id/input_layout_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/ks_logo">
 
         <EditText
             android:id="@+id/email"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_layout_username">
+        app:layout_constraintTop_toBottomOf="@+id/input_layout_email">
 
         <EditText
             android:id="@+id/password"
@@ -62,20 +62,19 @@
 
     <Button
         android:id="@+id/login"
-        style="?android:attr/borderlessButtonStyle"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="@string/text_log_in"
-        android:textColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_layout_password" />
 
     <TextView
-        android:id="@+id/signUp"
+        android:id="@+id/sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

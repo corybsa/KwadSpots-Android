@@ -3,7 +3,6 @@ package com.carbonmade.corybsa.kwadspots.di;
 import android.app.Application;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.moshi.Moshi;
 import com.squareup.picasso.Picasso;

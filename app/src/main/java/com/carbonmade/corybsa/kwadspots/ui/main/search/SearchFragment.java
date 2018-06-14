@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import dagger.android.support.DaggerFragment;
 
 public class SearchFragment extends DaggerFragment implements SearchContract.View {
-    @BindView(R.id.searchView) SearchView mSearchView;
+    @BindView(R.id.search_view) SearchView mSearchView;
 
     @Inject SearchPresenter mPresenter;
 

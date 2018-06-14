@@ -28,7 +28,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginContr
     @BindView(R.id.email) EditText mEmail;
     @BindView(R.id.password) EditText mPassword;
     @BindView(R.id.login) Button mLogin;
-    @BindView(R.id.signUp) TextView mSignUp;
+    @BindView(R.id.sign_up) TextView mSignUp;
 
     @Inject FirebaseAuth mAuth;
     @Inject LoginPresenter mPresenter;
@@ -38,7 +38,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginContr
         mPresenter.onLoginClicked(mEmail.getText().toString(), mPassword.getText().toString());
     }
 
-    @OnClick(R.id.signUp)
+    @OnClick(R.id.sign_up)
     void onSignUpClick(View view) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);

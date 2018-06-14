@@ -37,7 +37,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void onCreate() {
-        Fragment fragment = mMainView.getMainFragmentManager().findFragmentById(R.id.mainContent);
+        Fragment fragment = mMainView.getMainFragmentManager().findFragmentById(R.id.main_content);
 
         if(fragment == null) {
             mMainView.loadHomeFragment();
