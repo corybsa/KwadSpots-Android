@@ -13,6 +13,7 @@
         android:name=".App"
         tools:ignore="GoogleAppIndexingWarning">
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDp7DJ-sTMqCS5MAi3-j_-ZDNk0V-oJ59M"/>
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/app_name">
