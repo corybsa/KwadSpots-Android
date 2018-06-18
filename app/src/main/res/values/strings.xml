@@ -18,4 +18,5 @@
     <string name="spots_actions_add_photo">Add Photo</string>
     <string name="spots_actions_add_something">Add Another Thing</string>
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="main_tab_profile">Profile</string>
 </resources>

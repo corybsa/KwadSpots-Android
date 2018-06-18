@@ -14,6 +14,7 @@ interface MainContract {
         void loadHomeFragment();
         void loadSearchFragment();
         void loadSpotsFragment();
+        void loadProfileFragment();
         FragmentManager getMainFragmentManager();
     }
 

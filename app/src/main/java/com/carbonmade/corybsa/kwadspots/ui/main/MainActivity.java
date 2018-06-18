@@ -1,36 +1,35 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.helpers.DrawerHelper;
-import com.carbonmade.corybsa.kwadspots.ui.login.LoginActivity;
 import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
+import com.carbonmade.corybsa.kwadspots.ui.main.profile.ProfileFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.lang.reflect.Field;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import dagger.Lazy;
 import dagger.android.support.DaggerAppCompatActivity;
 
@@ -39,24 +38,15 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
 
     @BindView(R.id.navigation) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @BindView(R.id.nav_view) NavigationView mNavigationView;
 
     @Inject FirebaseAuth mAuth;
     @Inject MainPresenter mPresenter;
-    @Inject Lazy<HomeFragment> mHomeFragmentProvider;
-    @Inject Lazy<SearchFragment> mSearchFragmentProvider;
-    @Inject Lazy<SpotsFragment> mSpotsFragmentProvider;
+    @Inject Lazy<HomeFragment> mHomeFragmentLazy;
+    @Inject Lazy<SearchFragment> mSearchFragmentLazy;
+    @Inject Lazy<SpotsFragment> mSpotsFragmentLazy;
+    @Inject Lazy<ProfileFragment> mProfileFragmentLazy;
 
     private Fragment mFragment;
-    private DrawerHelper mDrawerHelper;
-
-    @OnClick(R.id.log_out)
-    void onClick(View view) {
-        mAuth.signOut();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,18 +56,9 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
 
         setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
-        Drawable drawable = getResources().getDrawable(R.drawable.ic_menu_black_24dp);
-        drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        actionBar.setHomeAsUpIndicator(drawable);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
 
-        mDrawerHelper = new DrawerHelper(this, mAuth);
-
-        mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
-
-        if(mNavigationView != null) {
-            mDrawerHelper.setupDrawerContent(mNavigationView, mDrawerLayout);
-        }
+        disableShiftMode(mBottomNavigationView);
 
         mPresenter.takeView(this);
         mPresenter.onCreate();
@@ -112,19 +93,27 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
 
     @Override
     public void loadHomeFragment() {
-        loadFragment(mHomeFragmentProvider.get());
+        mToolbar.setVisibility(View.GONE);
+        loadFragment(mHomeFragmentLazy.get());
     }
 
     @Override
     public void loadSpotsFragment() {
-        loadFragment(mSpotsFragmentProvider.get());
+        mToolbar.setVisibility(View.GONE);
+        loadFragment(mSpotsFragmentLazy.get());
     }
 
     @Override
     public void loadSearchFragment() {
-        loadFragment(mSearchFragmentProvider.get());
+        mToolbar.setVisibility(View.GONE);
+        loadFragment(mSearchFragmentLazy.get());
     }
 
+    @Override
+    public void loadProfileFragment() {
+        mToolbar.setVisibility(View.VISIBLE);
+        loadFragment(mProfileFragmentLazy.get());
+    }
 
     @Override
     public FragmentManager getMainFragmentManager() {
@@ -132,13 +121,28 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                // Open the navigation drawer when the home icon is selected from the toolbar.
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                return true;
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @SuppressLint("RestrictedApi")
+    public static void disableShiftMode(BottomNavigationView view) {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
+        try {
+            Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+            shiftingMode.setAccessible(true);
+            shiftingMode.setBoolean(menuView, false);
+            shiftingMode.setAccessible(false);
+            for (int i = 0; i < menuView.getChildCount(); i++) {
+                BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+                item.setShiftingMode(false);
+                item.setChecked(item.getItemData().isChecked());
+            }
+        } catch (NoSuchFieldException e) {
+            Log.e("disableShiftMode", "Unable to get shift mode field", e);
+        } catch (IllegalAccessException e) {
+            Log.e("disableShiftMode", "Unable to change value of shift mode", e);
         }
-        return super.onOptionsItemSelected(item);
     }
 }

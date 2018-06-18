@@ -3,6 +3,7 @@ package com.carbonmade.corybsa.kwadspots.ui.main;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.carbonmade.corybsa.kwadspots.di.FragmentScoped;
 import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
+import com.carbonmade.corybsa.kwadspots.ui.main.profile.ProfileFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 
@@ -27,4 +28,8 @@ public abstract class MainModule {
     @FragmentScoped
     @ContributesAndroidInjector
     abstract SpotsFragment spotsFragment();
+
+    @FragmentScoped
+    @ContributesAndroidInjector
+    abstract ProfileFragment profileFragment();
 }

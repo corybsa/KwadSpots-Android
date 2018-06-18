@@ -30,6 +30,9 @@ public class MainPresenter implements MainContract.Presenter {
             case R.id.navigation_search:
                 mMainView.loadSearchFragment();
                 return true;
+            case R.id.navigation_profile:
+                mMainView.loadProfileFragment();
+                return true;
         }
 
         return false;
@@ -59,6 +62,9 @@ public class MainPresenter implements MainContract.Presenter {
                 break;
             case "SpotsFragment":
                 mMainView.loadSpotsFragment();
+                break;
+            case "ProfileFragment":
+
                 break;
             default:
                 mMainView.loadHomeFragment();
