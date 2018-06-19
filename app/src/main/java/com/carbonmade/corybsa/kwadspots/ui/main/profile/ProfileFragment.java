@@ -1,7 +1,9 @@
 package com.carbonmade.corybsa.kwadspots.ui.main.profile;
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,16 +42,5 @@ public class ProfileFragment extends DaggerFragment implements ProfileContract.V
         mAdView.loadAd(adRequest);
 
         return view;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_logout:
-                mAuth.signOut();
-                break;
-        }
-
-        return false;
     }
 }

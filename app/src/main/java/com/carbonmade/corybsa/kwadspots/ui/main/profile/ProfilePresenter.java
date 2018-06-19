@@ -5,19 +5,19 @@ import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import javax.inject.Inject;
 
 @ActivityScoped
-public class ProfilePresenter implements ProfileContract.Presenter {
-    private ProfileContract.View mProfileView;
+final public class ProfilePresenter implements ProfileContract.Presenter {
+    private ProfileContract.View mView;
 
     @Inject
-    public ProfilePresenter() {}
+    ProfilePresenter() {}
 
     @Override
     public void takeView(ProfileContract.View view) {
-        mProfileView = view;
+        mView = view;
     }
 
     @Override
     public void dropView() {
-        mProfileView = null;
+        mView = null;
     }
 }

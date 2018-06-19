@@ -1,4 +1,4 @@
-package com.carbonmade.corybsa.kwadspots.ui.signup;
+package com.carbonmade.corybsa.kwadspots.ui.sign_up;
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 @ActivityScoped
 public class SignUpPresenter implements SignUpContract.Presenter {
-    private SignUpContract.View mSignUpView;
+    private SignUpContract.View mView;
     private FirebaseAuth mAuth;
 
     @Inject
@@ -24,17 +24,17 @@ public class SignUpPresenter implements SignUpContract.Presenter {
     @Override
     public void onSignUpClicked(String email, String password, String passwordVerify) {
         if(email.isEmpty()) {
-            mSignUpView.onAccountFailed("You need to provide an email.");
+            mView.onAccountFailed("You need to provide an email.");
             return;
         }
 
         if(password.isEmpty() || password.length() < 8) {
-            mSignUpView.onAccountFailed("You need to provide a password that is at least 8 characters long.");
+            mView.onAccountFailed("You need to provide a password that is at least 8 characters long.");
             return;
         }
 
         if(!password.equals(passwordVerify)) {
-            mSignUpView.onAccountFailed("Passwords did not match.");
+            mView.onAccountFailed("Passwords did not match.");
             return;
         }
 
@@ -43,14 +43,14 @@ public class SignUpPresenter implements SignUpContract.Presenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            mSignUpView.onAccountCreated();
+                            mView.onAccountCreated();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        mSignUpView.onAccountFailed(e.getMessage());
+                        mView.onAccountFailed(e.getMessage());
                     }
                 }
         );
@@ -58,11 +58,11 @@ public class SignUpPresenter implements SignUpContract.Presenter {
 
     @Override
     public void takeView(SignUpContract.View view) {
-        mSignUpView = view;
+        mView = view;
     }
 
     @Override
     public void dropView() {
-        mSignUpView = null;
+        mView = null;
     }
 }

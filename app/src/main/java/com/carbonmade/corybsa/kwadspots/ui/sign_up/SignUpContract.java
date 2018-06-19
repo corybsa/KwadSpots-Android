@@ -1,4 +1,4 @@
-package com.carbonmade.corybsa.kwadspots.ui.signup;
+package com.carbonmade.corybsa.kwadspots.ui.sign_up;
 
 import com.carbonmade.corybsa.kwadspots.ui.BasePresenter;
 import com.carbonmade.corybsa.kwadspots.ui.BaseView;

@@ -1,11 +1,17 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
+import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
+import android.support.transition.Fade;
+import android.support.transition.Transition;
+import android.support.transition.TransitionManager;
+import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,7 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.carbonmade.corybsa.kwadspots.R;
-import com.carbonmade.corybsa.kwadspots.helpers.DrawerHelper;
+import com.carbonmade.corybsa.kwadspots.ui.login.LoginActivity;
 import com.carbonmade.corybsa.kwadspots.ui.main.home.HomeFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.profile.ProfileFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.search.SearchFragment;
@@ -47,6 +53,7 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
     @Inject Lazy<ProfileFragment> mProfileFragmentLazy;
 
     private Fragment mFragment;
+    private ActionBar mActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +62,8 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
+        mActionBar = getSupportActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(false);
 
         disableShiftMode(mBottomNavigationView);
 
@@ -87,31 +94,44 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
     public void loadFragment(Fragment fragment) {
         mFragment = fragment;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        View view = findViewById(R.id.main_content);
+        TransitionSet set = new TransitionSet();
+        set.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
+
+        Transition fadeIn = new Fade();
+        fadeIn.setDuration(75);
+        fadeIn.addTarget(view);
+
+        Transition fadeOut = new Fade();
+        fadeOut.setDuration(75);
+        fadeOut.addTarget(view);
+
+        set.addTransition(fadeOut);
+
         transaction.replace(R.id.main_content, mFragment);
         transaction.commit();
+
+        set.addTransition(fadeIn);
     }
 
     @Override
     public void loadHomeFragment() {
-        mToolbar.setVisibility(View.GONE);
         loadFragment(mHomeFragmentLazy.get());
     }
 
     @Override
     public void loadSpotsFragment() {
-        mToolbar.setVisibility(View.GONE);
         loadFragment(mSpotsFragmentLazy.get());
     }
 
     @Override
     public void loadSearchFragment() {
-        mToolbar.setVisibility(View.GONE);
         loadFragment(mSearchFragmentLazy.get());
     }
 
     @Override
     public void loadProfileFragment() {
-        mToolbar.setVisibility(View.VISIBLE);
         loadFragment(mProfileFragmentLazy.get());
     }
 
@@ -124,6 +144,20 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_logout:
+                mAuth.signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
+
+        return false;
     }
 
     @SuppressLint("RestrictedApi")

@@ -5,21 +5,21 @@ import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import javax.inject.Inject;
 
 @ActivityScoped
-public class SearchPresenter implements SearchContract.Presenter {
-    private SearchContract.View mSearchView;
+final public class SearchPresenter implements SearchContract.Presenter {
+    private SearchContract.View mView;
 
     @Inject
-    public SearchPresenter() {
+    SearchPresenter() {
 
     }
 
     @Override
     public void takeView(SearchContract.View view) {
-        mSearchView = view;
+        mView = view;
     }
 
     @Override
     public void dropView() {
-        mSearchView = null;
+        mView = null;
     }
 }

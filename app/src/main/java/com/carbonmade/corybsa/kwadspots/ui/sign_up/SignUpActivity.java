@@ -1,8 +1,12 @@
-package com.carbonmade.corybsa.kwadspots.ui.signup;
+package com.carbonmade.corybsa.kwadspots.ui.sign_up;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -25,12 +29,13 @@ public class SignUpActivity extends DaggerAppCompatActivity implements SignUpCon
     @BindView(R.id.email) EditText mEmail;
     @BindView(R.id.password) EditText mPassword;
     @BindView(R.id.password_verify) EditText mPasswordVerify;
+    @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @Inject FirebaseAuth mAuth;
     @Inject SignUpPresenter mPresenter;
 
     @OnClick(R.id.sign_up)
-    void onSignUpClick(View view) {
+    void onSignUpClick() {
         mPresenter.onSignUpClicked(
                 mEmail.getText().toString(),
                 mPassword.getText().toString(),
@@ -44,7 +49,41 @@ public class SignUpActivity extends DaggerAppCompatActivity implements SignUpCon
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
 
+        setSupportActionBar(mToolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Create Account");
+
         mPresenter.takeView(this);
+
+        mPasswordVerify.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if(keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                    switch(keyCode) {
+                        case KeyEvent.KEYCODE_DPAD_CENTER:
+                        case KeyEvent.KEYCODE_ENTER:
+                            onSignUpClick();
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

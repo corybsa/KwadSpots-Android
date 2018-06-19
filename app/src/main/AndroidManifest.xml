@@ -5,9 +5,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ks_orange"
+        android:icon="@mipmap/ic_launcher_kwad"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ks_orange"
+        android:roundIcon="@mipmap/ic_launcher_kwad"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".App"
@@ -24,8 +24,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.main.MainActivity"/>
-        <activity android:name=".ui.signup.SignUpActivity"/>
+        <activity android:name=".ui.sign_up.SignUpActivity"/>
         <activity android:name=".ui.settings.SettingsActivity"/>
+        <activity android:name=".ui.password_reset.PasswordResetActivity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

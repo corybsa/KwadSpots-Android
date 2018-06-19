@@ -14,7 +14,7 @@ import javax.inject.Inject;
 
 @ActivityScoped
 final public class LoginPresenter implements LoginContract.Presenter {
-    private LoginContract.View mLoginView;
+    private LoginContract.View mView;
     private FirebaseAuth mAuth;
 
     @Inject
@@ -31,19 +31,19 @@ final public class LoginPresenter implements LoginContract.Presenter {
         FirebaseUser user = mAuth.getCurrentUser();
 
         if(user != null) {
-            mLoginView.onLoginSuccess();
+            mView.onLoginSuccess();
         }
     }
 
     @Override
     public void onLoginClicked(String email, String password) {
         if(email.isEmpty()) {
-            mLoginView.onLoginFailure("If you want to get in, you're going to have to show some credentials.");
+            mView.onLoginFailure("If you want to get in, you're going to have to show some credentials.");
             return;
         }
 
         if(password.isEmpty()) {
-            mLoginView.onLoginFailure("If you want to get in, you're going to have to show some credentials.");
+            mView.onLoginFailure("If you want to get in, you're going to have to show some credentials.");
             return;
         }
 
@@ -52,26 +52,26 @@ final public class LoginPresenter implements LoginContract.Presenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            mLoginView.onLoginSuccess();
+                            mView.onLoginSuccess();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        mLoginView.onLoginFailure(e.getLocalizedMessage());
+                        mView.onLoginFailure(e.getLocalizedMessage());
                     }
                 });
     }
 
     @Override
     public void takeView(LoginContract.View view) {
-        mLoginView = view;
+        mView = view;
         checkUserLoggedIn();
     }
 
     @Override
     public void dropView() {
-        mLoginView = null;
+        mView = null;
     }
 }

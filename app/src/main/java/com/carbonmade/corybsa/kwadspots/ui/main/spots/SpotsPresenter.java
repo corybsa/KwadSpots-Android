@@ -30,13 +30,13 @@ import com.google.android.gms.tasks.Task;
 import javax.inject.Inject;
 
 @ActivityScoped
-public class SpotsPresenter implements SpotsContract.Presenter, LocationListener, OnSuccessListener<Location> {
+final public class SpotsPresenter implements SpotsContract.Presenter, LocationListener, OnSuccessListener<Location> {
     public static final LatLng GET_FPV = new LatLng(27.3451935, -82.5385566);
     private static final long SECOND = 1000;
     private static final long LOCATION_UPDATE_INTERVAL = 30 * SECOND;
     private static final long LOCATION_UPDATE_INTERVAL_FASTEST = 15 * SECOND;
 
-    private SpotsContract.View mSpotsView;
+    private SpotsContract.View mView;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
     private LocationCallback mLocationCallback;
@@ -92,7 +92,7 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
     @Override
     public void onSuccess(Location location) {
         if(location != null) {
-            mSpotsView.focusCurrentLocation(location);
+            mView.focusCurrentLocation(location);
         }
     }
 
@@ -118,12 +118,12 @@ public class SpotsPresenter implements SpotsContract.Presenter, LocationListener
 
     @Override
     public void takeView(SpotsContract.View view) {
-        mSpotsView = view;
+        mView = view;
     }
 
     @Override
     public void dropView() {
-        mSpotsView = null;
+        mView = null;
     }
 
     private void startLocationUpdates() {

@@ -1,4 +1,4 @@
-package com.carbonmade.corybsa.kwadspots.ui.signup;
+package com.carbonmade.corybsa.kwadspots.ui.sign_up;
 
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 

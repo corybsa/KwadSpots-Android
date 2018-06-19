@@ -3,6 +3,7 @@ package com.carbonmade.corybsa.kwadspots.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -49,7 +50,8 @@ public class DrawerHelper {
         drawerHeaderText.setText(headerText);
 
         Picasso.with(mActivity)
-                .load(R.drawable.ks_orange)
+                .load(R.drawable.ic_ks_transparent)
+                .resize(128, 128)
                 .transform(new CropCircleTransformation())
                 .into(drawerHeaderProfilePic);
 
