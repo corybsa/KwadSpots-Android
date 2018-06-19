@@ -52,8 +52,11 @@ public class SignUpActivity extends DaggerAppCompatActivity implements SignUpCon
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Create Account");
+
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Create Account");
+        }
 
         mPresenter.takeView(this);
 

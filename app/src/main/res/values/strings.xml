@@ -23,4 +23,6 @@
     <string name="password_reset_submit">Send Reset Email</string>
     <string name="password_reset_info">We\'ll need your email so we can send a reset link.</string>
     <string name="forgot_password">Forgot password? Tap here.</string>
+    <string name="edit_text_spot_name_hint">Spot name</string>
+    <string name="edit_text_spot_description_hint">Spot description</string>
 </resources>

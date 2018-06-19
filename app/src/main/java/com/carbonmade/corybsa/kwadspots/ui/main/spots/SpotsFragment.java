@@ -197,7 +197,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public void onMapLongClick(LatLng latLng) {
-            vibrate(80);
+            vibrate(30);
 
             mSpotsFragment.mBottomSheetDialog = new BottomSheetDialog(mSpotsFragment.requireContext());
             View view = getLayoutInflater().inflate(R.layout.fragment_spots_actions, null);
@@ -211,6 +211,8 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
                     Toast.makeText(mSpotsFragment.requireActivity(), "test", Toast.LENGTH_LONG).show();
                 }
             });
+
+            // TODO: send LatLng to create spots activity.
 
             mSpotsFragment.mBottomSheetDialog.show();
 

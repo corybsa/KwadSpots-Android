@@ -3,8 +3,9 @@
     <color name="colorPrimary">#424242</color>
     <color name="colorPrimaryDark">#212121</color>
     <color name="colorAccent">#FF9800</color>
-    <color name="colorAccentLight">#C1FF9800</color>
+    <color name="drib_purple">#D500F9</color>
 
     <color name="light_black">#212121</color>
     <color name="off_white">#FCFCFC</color>
+    <color name="navigation_inactive">#80FFFFFF</color>
 </resources>

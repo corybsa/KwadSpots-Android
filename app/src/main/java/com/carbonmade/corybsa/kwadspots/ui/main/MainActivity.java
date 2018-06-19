@@ -1,6 +1,5 @@
 package com.carbonmade.corybsa.kwadspots.ui.main;
 
-import android.animation.TimeInterpolator;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.transition.Fade;
 import android.support.transition.Transition;
-import android.support.transition.TransitionManager;
 import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -53,7 +51,6 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
     @Inject Lazy<ProfileFragment> mProfileFragmentLazy;
 
     private Fragment mFragment;
-    private ActionBar mActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +59,11 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
-        mActionBar = getSupportActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(false);
+        ActionBar actionBar = getSupportActionBar();
+
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
 
         disableShiftMode(mBottomNavigationView);
 

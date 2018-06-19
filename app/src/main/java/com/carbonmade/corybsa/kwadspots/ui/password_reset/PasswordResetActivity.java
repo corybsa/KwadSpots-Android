@@ -43,8 +43,11 @@ public class PasswordResetActivity extends DaggerAppCompatActivity implements Pa
         setSupportActionBar(mToolbar);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle("Password Reset");
+
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Password Reset");
+        }
 
         mPresenter.takeView(this);
 
