@@ -3,12 +3,12 @@ package com.carbonmade.corybsa.kwadspots.datamodels;
 public class SearchResult {
     private String mImage;
     private String mName;
-    private String mDescription;
+    private String mType;
 
-    public SearchResult(String image, String name, String description) {
+    public SearchResult(String image, String name, String type) {
         mImage = image;
         mName = name;
-        mDescription = description;
+        mType = type;
     }
 
     public String getImage() {
@@ -27,11 +27,11 @@ public class SearchResult {
         mName = name;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public String getType() {
+        return mType;
     }
 
-    public void setDescription(String description) {
-        mDescription = description;
+    public void setType(String type) {
+        mType = type;
     }
 }

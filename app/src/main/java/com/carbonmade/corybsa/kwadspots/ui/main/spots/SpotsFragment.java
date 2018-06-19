@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
+import com.carbonmade.corybsa.kwadspots.ui.create_spot.CreateSpotActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -40,6 +42,8 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback, SpotsContract.View {
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
+    public static final String KEY_LATITUDE = "Latitude";
+    public static final String KEY_LONGITUDE = "Longitude";
 
     @BindView(R.id.map_view) MapView mMapView;
 
@@ -213,13 +217,17 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
             });
 
             // TODO: send LatLng to create spots activity.
+            Intent intent = new Intent(SpotsFragment.this.getActivity(), CreateSpotActivity.class);
+            intent.putExtra(KEY_LATITUDE, latLng.latitude);
+            intent.putExtra(KEY_LONGITUDE, latLng.longitude);
+            startActivity(intent);
 
-            mSpotsFragment.mBottomSheetDialog.show();
+            /*mSpotsFragment.mBottomSheetDialog.show();
 
             MarkerOptions options = new MarkerOptions()
                     .position(latLng)
                     .title("Test");
-            Marker marker = drawMarker(options);
+            Marker marker = drawMarker(options);*/
         }
 
         @Override

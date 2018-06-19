@@ -9,6 +9,6 @@ interface CreateSpotContract {
     }
 
     interface Presenter extends BasePresenter<View> {
-
+        void typeSelected(int position);
     }
 }

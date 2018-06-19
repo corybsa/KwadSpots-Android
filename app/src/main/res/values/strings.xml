@@ -11,10 +11,13 @@
     <string name="text_no_account">No account? Sign up here.</string>
     <string name="text_sign_up">Sign Up</string>
     <string name="back_to_log_in">Back to log in.</string>
+    <string name="forgot_password">Forgot password? Tap here.</string>
 
     <string name="edit_text_email_hint">Email</string>
     <string name="edit_text_password_hint">Password</string>
     <string name="edit_text_password_verify_hint">Verify Password</string>
+    <string name="edit_text_spot_name_hint">Spot name</string>
+    <string name="edit_text_spot_type_hint">Spot type</string>
 
     <string name="spots_actions_add_photo">Add Photo</string>
     <string name="spots_actions_add_something">Add Another Thing</string>
@@ -22,7 +25,7 @@
     <string name="main_tab_profile">Profile</string>
     <string name="password_reset_submit">Send Reset Email</string>
     <string name="password_reset_info">We\'ll need your email so we can send a reset link.</string>
-    <string name="forgot_password">Forgot password? Tap here.</string>
-    <string name="edit_text_spot_name_hint">Spot name</string>
-    <string name="edit_text_spot_description_hint">Spot description</string>
+
+    <string name="toolbar_action_create">Create</string>
+    <string name="add_a_picture">Add a picture</string>
 </resources>

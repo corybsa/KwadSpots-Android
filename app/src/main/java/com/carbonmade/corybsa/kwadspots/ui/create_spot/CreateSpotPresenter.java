@@ -12,6 +12,11 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
     CreateSpotPresenter() {}
 
     @Override
+    public void typeSelected(int position) {
+
+    }
+
+    @Override
     public void takeView(CreateSpotContract.View view) {
         mView = view;
     }

@@ -97,13 +97,13 @@ public class SearchResultsAdapter extends RecyclerView.Adapter {
     class SearchResultItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView mSpotImage;
         private TextView mSpotName;
-        private TextView mSpotDescription;
+        private TextView mSpotType;
 
         SearchResultItemViewHolder(View view) {
             super(view);
             mSpotImage = view.findViewById(R.id.spot_image);
             mSpotName = view.findViewById(R.id.spot_name);
-            mSpotDescription = view.findViewById(R.id.spot_description);
+            mSpotType = view.findViewById(R.id.spot_type);
             view.setOnClickListener(this);
         }
 
@@ -116,7 +116,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter {
                     .into(mSpotImage);
 
             mSpotName.setText(result.getName());
-            mSpotDescription.setText(result.getDescription());
+            mSpotType.setText(result.getType());
         }
 
         @Override

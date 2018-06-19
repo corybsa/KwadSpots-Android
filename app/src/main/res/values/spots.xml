@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spots_array">
+        <item>Bando</item>
+        <item>Public Park</item>
+        <item>Play Ground</item>
+        <item>RC Field</item>
+        <item>Parking Lot</item>
+        <item>Open Field</item>
+        <item>Indoor</item>
+        <item>Other</item>
+    </string-array>
+</resources>

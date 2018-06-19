@@ -1,5 +1,7 @@
 package com.carbonmade.corybsa.kwadspots.di;
 
+import com.carbonmade.corybsa.kwadspots.ui.create_spot.CreateSpotActivity;
+import com.carbonmade.corybsa.kwadspots.ui.create_spot.CreateSpotModule;
 import com.carbonmade.corybsa.kwadspots.ui.login.LoginActivity;
 import com.carbonmade.corybsa.kwadspots.ui.login.LoginModule;
 import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
@@ -31,6 +33,10 @@ public abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = MainModule.class)
     abstract MainActivity mainActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = CreateSpotModule.class)
+    abstract CreateSpotActivity createSpotActivity();
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = SettingsModule.class)
