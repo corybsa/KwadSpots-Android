@@ -33,7 +33,7 @@
             android:id="@+id/search_results"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layoutAnimation="@anim/slide_from_bottom_layout"/>
+            android:layoutAnimation="@anim/layout_animation_slide_from_bottom"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.constraint.ConstraintLayout>
