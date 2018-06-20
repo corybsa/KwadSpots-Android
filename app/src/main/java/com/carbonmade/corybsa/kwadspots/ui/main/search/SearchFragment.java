@@ -2,6 +2,7 @@ package com.carbonmade.corybsa.kwadspots.ui.main.search;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.graphics.drawable.AnimationUtilsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,8 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -104,8 +107,11 @@ public class SearchFragment extends DaggerFragment implements SearchContract.Vie
         if(count == mSearchResultsAdapter.getItemCount()) {
             mSearchResultsAdapter.hideProgressBar();
         } else {
+            LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.fall_down);
+            mRecyclerView.setLayoutAnimation(controller);
             mSearchResultsAdapter.showProgressBar();
             mSearchResultsAdapter.notifyDataSetChanged();
+            mRecyclerView.scheduleLayoutAnimation();
         }
     }
 }
