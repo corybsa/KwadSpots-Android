@@ -39,12 +39,6 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    FirebaseFirestore provideFirebaseFirestore() {
-        return FirebaseFirestore.getInstance();
-    }
-
-    @Provides
-    @Singleton
     Cache provideHttpCache(Application application) {
         int cacheSize = 10 * 1024 * 1024; // 10mb
         return new Cache(application.getCacheDir(), cacheSize);

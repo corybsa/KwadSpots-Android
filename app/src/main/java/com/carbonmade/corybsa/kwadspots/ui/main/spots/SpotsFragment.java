@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
@@ -42,6 +41,7 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback, SpotsContract.View {
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
+    public static final String KEY_DOCUMENT_ID = "Document ID";
     public static final String KEY_LATITUDE = "Latitude";
     public static final String KEY_LONGITUDE = "Longitude";
 
@@ -183,8 +183,21 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public SpotsFragment getFragment() {
-        return this;
+    public void createSpotSuccess(String documentId, LatLng latLng) {
+        Intent intent = new Intent(SpotsFragment.this.getActivity(), CreateSpotActivity.class);
+        intent.putExtra(KEY_DOCUMENT_ID, documentId);
+        intent.putExtra(KEY_LATITUDE, latLng.latitude);
+        intent.putExtra(KEY_LONGITUDE, latLng.longitude);
+        startActivity(intent);
+    }
+
+    @Override
+    public void createSpotFailed(String message) {
+        new android.support.v7.app.AlertDialog.Builder(requireActivity())
+                .setMessage(message)
+                .setPositiveButton("Ok", null)
+                .create()
+                .show();
     }
 
     public void focusCurrentLocation(Location location) {
@@ -202,32 +215,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         @Override
         public void onMapLongClick(LatLng latLng) {
             vibrate(30);
-
-            mSpotsFragment.mBottomSheetDialog = new BottomSheetDialog(mSpotsFragment.requireContext());
-            View view = getLayoutInflater().inflate(R.layout.fragment_spots_actions, null);
-            mSpotsFragment.mBottomSheetDialog.setContentView(view);
-
-            Button button = (Button)view.findViewById(R.id.spots_actions_add_photo);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mSpotsFragment.requireActivity(), "test", Toast.LENGTH_LONG).show();
-                }
-            });
-
-            // TODO: send LatLng to create spots activity.
-            Intent intent = new Intent(SpotsFragment.this.getActivity(), CreateSpotActivity.class);
-            intent.putExtra(KEY_LATITUDE, latLng.latitude);
-            intent.putExtra(KEY_LONGITUDE, latLng.longitude);
-            startActivity(intent);
-
-            /*mSpotsFragment.mBottomSheetDialog.show();
-
-            MarkerOptions options = new MarkerOptions()
-                    .position(latLng)
-                    .title("Test");
-            Marker marker = drawMarker(options);*/
+            mPresenter.onMarkerAdd(latLng);
         }
 
         @Override

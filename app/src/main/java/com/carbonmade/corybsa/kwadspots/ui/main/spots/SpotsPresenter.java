@@ -12,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
+import com.carbonmade.corybsa.kwadspots.helpers.FirestoreHelper;
 import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,6 +27,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -87,6 +92,34 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
 
         task.addOnSuccessListener(resolver);
         task.addOnFailureListener(resolver);
+    }
+
+    @Override
+    public void onMarkerAdd(final LatLng latLng) {
+        FirestoreHelper helper = new FirestoreHelper();
+        HashMap<String, Object> spot = new HashMap<>();
+
+        spot.put("picture", "");
+        spot.put("name", "");
+        spot.put("type", 0);
+        spot.put("rating", 0);
+        spot.put("comment", "");
+        spot.put("latitude", latLng.latitude);
+        spot.put("longitude", latLng.longitude);
+
+        helper.putSpot(spot)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        mView.createSpotSuccess(documentReference.getId(), latLng);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        mView.createSpotFailed(e.getMessage());
+                    }
+                });
     }
 
     @Override
