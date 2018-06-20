@@ -9,6 +9,7 @@ import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.transition.Fade;
 import android.support.transition.Transition;
+import android.support.transition.TransitionInflater;
 import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,6 +40,8 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class MainActivity extends DaggerAppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainContract.View {
     protected static final String KEY_FRAGMENT = "Fragment";
+    private static final long MOVE_DEFAULT_TIME = 1000;
+    private static final long FADE_DEFAULT_TIME = 300;
 
     @BindView(R.id.navigation) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -95,24 +98,14 @@ public class MainActivity extends DaggerAppCompatActivity implements BottomNavig
         mFragment = fragment;
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        View view = findViewById(R.id.main_content);
-        TransitionSet set = new TransitionSet();
-        set.setOrdering(TransitionSet.ORDERING_SEQUENTIAL);
-
-        Transition fadeIn = new Fade();
-        fadeIn.setDuration(75);
-        fadeIn.addTarget(view);
-
-        Transition fadeOut = new Fade();
-        fadeOut.setDuration(75);
-        fadeOut.addTarget(view);
-
-        set.addTransition(fadeOut);
+        transaction.setCustomAnimations(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out,
+                android.R.anim.fade_in,
+                android.R.anim.fade_out);
 
         transaction.replace(R.id.main_content, mFragment);
         transaction.commit();
-
-        set.addTransition(fadeIn);
     }
 
     @Override
