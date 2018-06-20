@@ -2,10 +2,7 @@
 .gradle
 gradlew.bat
 /local.properties
-/.idea/caches/build_file_checksum.ser
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
+/.idea/*
 .DS_Store
 /build
 /captures
