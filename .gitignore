@@ -1,6 +1,7 @@
 *.iml
 .gradle
 .idea
+.idea/misc.xml
 .DS_Store
 .externalNativeBuild
 gradlew.bat
