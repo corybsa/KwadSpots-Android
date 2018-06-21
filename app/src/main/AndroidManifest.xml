@@ -28,6 +28,16 @@
         <activity android:name=".ui.sign_up.SignUpActivity"/>
         <activity android:name=".ui.settings.SettingsActivity"/>
         <activity android:name=".ui.password_reset.PasswordResetActivity"/>
+
+        <provider
+            android:authorities="com.carbonmade.corybsa.kwadspots"
+            android:name="android.support.v4.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -35,5 +45,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
 </manifest>

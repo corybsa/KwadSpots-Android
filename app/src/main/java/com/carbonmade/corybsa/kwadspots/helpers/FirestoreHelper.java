@@ -8,13 +8,15 @@ import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 public class FirestoreHelper {
     private static final String COLLECTION_SPOTS = "spots";
 
     private FirebaseFirestore mFirestore;
 
-    public FirestoreHelper() {
-        mFirestore = FirebaseFirestore.getInstance();
+    public FirestoreHelper(FirebaseFirestore firestore) {
+        mFirestore = firestore;
     }
 
     public Task<DocumentReference> putSpot(HashMap<String, Object> spot) {

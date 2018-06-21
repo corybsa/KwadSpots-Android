@@ -41,6 +41,7 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     private static final long LOCATION_UPDATE_INTERVAL = 30 * SECOND;
     private static final long LOCATION_UPDATE_INTERVAL_FASTEST = 15 * SECOND;
 
+
     private SpotsContract.View mView;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
@@ -48,11 +49,13 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     private boolean mRequestingLocationUpdates;
     private Context mContext;
     private Activity mActivity;
+    private FirebaseFirestore mFirestore;
 
     @Inject
-    SpotsPresenter(Context context, MainActivity activity) {
+    SpotsPresenter(Context context, MainActivity activity, FirebaseFirestore firestore) {
         mContext = context;
         mActivity = activity;
+        mFirestore = firestore;
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(LOCATION_UPDATE_INTERVAL);
@@ -96,7 +99,7 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
 
     @Override
     public void onMarkerAdd(final LatLng latLng) {
-        FirestoreHelper helper = new FirestoreHelper();
+        FirestoreHelper helper = new FirestoreHelper(mFirestore);
         HashMap<String, Object> spot = new HashMap<>();
 
         spot.put("picture", "");
