@@ -16,9 +16,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
+import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.carbonmade.corybsa.kwadspots.ui.create_spot.CreateSpotActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +34,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.moshi.Moshi;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -48,6 +55,8 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     @BindView(R.id.map_view) MapView mMapView;
 
     @Inject SpotsPresenter mPresenter;
+    @Inject Moshi mMoshi;
+    @Inject Picasso mPicasso;
 
     private GoogleMap mGoogleMap;
     private boolean mSpotClicked = false;
@@ -77,6 +86,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         mGoogleMap.setOnMapLongClickListener(mapListener);
         mGoogleMap.setOnMarkerClickListener(mapListener);
         mGoogleMap.setOnCameraIdleListener(mapListener);
+        mGoogleMap.setInfoWindowAdapter(new SpotInfoWindow(getContext(), mMoshi, mPicasso));
         mPresenter.getCurrentLocation();
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -258,6 +268,44 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
                 } else {
                     vibrator.vibrate(duration);
                 }
+            }
+        }
+    }
+
+    class SpotInfoWindow implements GoogleMap.InfoWindowAdapter {
+        private Context mContext;
+        private Moshi mMoshi;
+        private Picasso mPicasso;
+
+        SpotInfoWindow(Context context, Moshi moshi, Picasso picasso) {
+            mContext = context;
+            mMoshi = moshi;
+            mPicasso = picasso;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            try {
+                LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.spot_info_window, null);
+                Spot spot = mMoshi.adapter(Spot.class).fromJson(marker.getSnippet());
+
+                TextView title = view.findViewById(R.id.spot_info_name);
+                ImageView picture = view.findViewById(R.id.spot_info_picture);
+
+                title.setText(spot.getName());
+                mPicasso.load(spot.getPicture())
+                        .placeholder(R.drawable.ic_ks_transparent)
+                        .into(picture);
+
+                return view;
+            } catch(IOException e) {
+                return null;
             }
         }
     }

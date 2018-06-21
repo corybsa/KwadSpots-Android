@@ -10,7 +10,6 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
@@ -33,10 +32,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.moshi.Moshi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,13 +60,15 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     private FirebaseFirestore mFirestore;
     private FirestoreHelper mFirestoreHelper;
     private List<Marker> mMarkers;
+    private Moshi mMoshi;
 
     @Inject
-    SpotsPresenter(Context context, MainActivity activity, FirebaseFirestore firestore) {
+    SpotsPresenter(Context context, MainActivity activity, FirebaseFirestore firestore, Moshi moshi) {
         mContext = context;
         mActivity = activity;
         mFirestore = firestore;
         mFirestoreHelper = new FirestoreHelper(mFirestore);
+        mMoshi = moshi;
         mMarkers = new ArrayList<>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         mLocationRequest = new LocationRequest();
@@ -228,7 +229,7 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
                                     MarkerOptions options = new MarkerOptions();
                                     options.position(new LatLng(spot.getLatitude(), spot.getLongitude()));
                                     options.title(spot.getName());
-                                    options.flat(true);
+                                    options.snippet(mMoshi.adapter(Spot.class).toJson(spot));
                                     mMarkers.add(mView.drawMarker(options));
                                 }
                             }
@@ -247,11 +248,11 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
 
         @Override
         public void onFailure(@NonNull Exception e) {
-            if (e instanceof ResolvableApiException) {
+            if(e instanceof ResolvableApiException) {
                 try {
-                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    ResolvableApiException resolvable = (ResolvableApiException)e;
                     resolvable.startResolutionForResult(mActivity, 6);
-                } catch (IntentSender.SendIntentException sendEx) {
+                } catch(IntentSender.SendIntentException sendEx) {
                     // Ignore the error.
                 }
             }

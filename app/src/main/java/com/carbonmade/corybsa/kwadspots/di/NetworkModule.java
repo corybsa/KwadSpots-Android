@@ -2,6 +2,7 @@ package com.carbonmade.corybsa.kwadspots.di;
 
 import android.app.Application;
 
+import com.carbonmade.corybsa.kwadspots.helpers.FirebaseRequestHandler;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
@@ -84,8 +85,9 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    Picasso providePicasso(Application app, OkHttpClient client) {
+    Picasso providePicasso(Application app, OkHttpClient client, FirebaseStorage storage) {
         return new Picasso.Builder(app)
+                .addRequestHandler(new FirebaseRequestHandler(storage))
                 .downloader(new OkHttp3Downloader(client))
                 .build();
     }

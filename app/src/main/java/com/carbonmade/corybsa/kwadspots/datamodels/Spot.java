@@ -1,6 +1,7 @@
 package com.carbonmade.corybsa.kwadspots.datamodels;
 
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.squareup.moshi.Json;
 
 public class Spot {
     public static final String FIELD_COMMENT = "comment";
@@ -11,12 +12,25 @@ public class Spot {
     public static final String FIELD_RATING = "rating";
     public static final String FIELD_TYPE = "type";
 
+    @Json(name = "comment")
     private String mComment;
+
+    @Json(name = "latitude")
     private double mLatitude;
+
+    @Json(name = "longitude")
     private double mLongitude;
+
+    @Json(name = "name")
     private String mName;
+
+    @Json(name = "picture")
     private String mPicture;
+
+    @Json(name = "rating")
     private double mRating;
+
+    @Json(name = "type")
     private long mType;
 
     public Spot(QueryDocumentSnapshot document) {
@@ -58,7 +72,7 @@ public class Spot {
     }
 
     public String getPicture() {
-        return mPicture;
+        return "gs://kwad-spots.appspot.com/images/" + mPicture;
     }
 
     public double getRating() {
