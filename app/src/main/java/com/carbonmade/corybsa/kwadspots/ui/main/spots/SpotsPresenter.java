@@ -10,7 +10,9 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
+import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.carbonmade.corybsa.kwadspots.helpers.FirestoreHelper;
 import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
@@ -24,13 +26,21 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -41,7 +51,6 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     private static final long LOCATION_UPDATE_INTERVAL = 30 * SECOND;
     private static final long LOCATION_UPDATE_INTERVAL_FASTEST = 15 * SECOND;
 
-
     private SpotsContract.View mView;
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest mLocationRequest;
@@ -50,12 +59,16 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     private Context mContext;
     private Activity mActivity;
     private FirebaseFirestore mFirestore;
+    private FirestoreHelper mFirestoreHelper;
+    private List<Marker> mMarkers;
 
     @Inject
     SpotsPresenter(Context context, MainActivity activity, FirebaseFirestore firestore) {
         mContext = context;
         mActivity = activity;
         mFirestore = firestore;
+        mFirestoreHelper = new FirestoreHelper(mFirestore);
+        mMarkers = new ArrayList<>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(LOCATION_UPDATE_INTERVAL);
@@ -76,6 +89,8 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
         if(!mRequestingLocationUpdates) {
             startLocationUpdates();
         }
+
+        getSpots();
     }
 
     @Override
@@ -98,31 +113,40 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     }
 
     @Override
-    public void onMarkerAdd(final LatLng latLng) {
-        FirestoreHelper helper = new FirestoreHelper(mFirestore);
+    public void onMarkerAdd(LatLng latLng) {
+        for(Marker marker : mMarkers) {
+            float[] distance = {0};
+            Location.distanceBetween(
+                    marker.getPosition().latitude,
+                    marker.getPosition().longitude,
+                    latLng.latitude,
+                    latLng.longitude,
+                    distance
+            );
+
+            if(distance[0] < 50) {
+                mView.showError("That's too close to another spot!");
+                return;
+            }
+        }
+
         HashMap<String, Object> spot = new HashMap<>();
 
-        spot.put("picture", "");
-        spot.put("name", "");
-        spot.put("type", 0);
-        spot.put("rating", 0);
-        spot.put("comment", "");
-        spot.put("latitude", latLng.latitude);
-        spot.put("longitude", latLng.longitude);
+        spot.put(Spot.FIELD_LATITUDE, latLng.latitude);
+        spot.put(Spot.FIELD_LONGITUDE, latLng.longitude);
 
-        helper.putSpot(spot)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        mView.createSpotSuccess(documentReference.getId(), latLng);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        mView.createSpotFailed(e.getMessage());
-                    }
-                });
+        mView.createSpotSuccess(latLng);
+    }
+
+    @Override
+    public void cameraMoved() {
+        mView.clearMap();
+        getSpots();
+    }
+
+    @Override
+    public void mapReady() {
+        getSpots();
     }
 
     @Override
@@ -182,11 +206,34 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
                         return;
                     }
 
-                    // TODO: get spots close to the location
-
                     mRequestingLocationUpdates = true;
                 }
             };
+        }
+    }
+
+    private void getSpots() {
+        LatLngBounds bounds = mView.getVisibleMap();
+
+        if(bounds != null) {
+            mFirestoreHelper.getSpots(bounds)
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful()) {
+                                mMarkers.clear();
+
+                                for(QueryDocumentSnapshot document : task.getResult()) {
+                                    Spot spot = new Spot(document);
+                                    MarkerOptions options = new MarkerOptions();
+                                    options.position(new LatLng(spot.getLatitude(), spot.getLongitude()));
+                                    options.title(spot.getName());
+                                    options.flat(true);
+                                    mMarkers.add(mView.drawMarker(options));
+                                }
+                            }
+                        }
+                    });
         }
     }
 
@@ -210,6 +257,4 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
             }
         }
     }
-
-
 }

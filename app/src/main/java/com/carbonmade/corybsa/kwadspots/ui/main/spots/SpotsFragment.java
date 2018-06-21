@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,6 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -50,7 +50,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     @Inject SpotsPresenter mPresenter;
 
     private GoogleMap mGoogleMap;
-    protected BottomSheetDialog mBottomSheetDialog;
+    private boolean mSpotClicked = false;
 
     @Inject
     public SpotsFragment() {}
@@ -76,6 +76,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         MapListener mapListener = new MapListener(this);
         mGoogleMap.setOnMapLongClickListener(mapListener);
         mGoogleMap.setOnMarkerClickListener(mapListener);
+        mGoogleMap.setOnCameraIdleListener(mapListener);
         mPresenter.getCurrentLocation();
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -88,12 +89,15 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         ) {
             mGoogleMap.setMyLocationEnabled(true);
         }
+
+        mPresenter.mapReady();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        clearMap();
         mPresenter.onResume();
     }
 
@@ -102,10 +106,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         super.onPause();
         mMapView.onPause();
         mPresenter.onPause();
-
-        if(mBottomSheetDialog != null) {
-            mBottomSheetDialog.dismiss();
-        }
     }
 
     @Override
@@ -113,10 +113,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         super.onDestroy();
         mMapView.onDestroy();
         mPresenter.onDestroy();
-
-        if(mBottomSheetDialog != null) {
-            mBottomSheetDialog.dismiss();
-        }
     }
 
     @Override
@@ -183,16 +179,15 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void createSpotSuccess(String documentId, LatLng latLng) {
+    public void createSpotSuccess(LatLng latLng) {
         Intent intent = new Intent(SpotsFragment.this.getActivity(), CreateSpotActivity.class);
-        intent.putExtra(KEY_DOCUMENT_ID, documentId);
         intent.putExtra(KEY_LATITUDE, latLng.latitude);
         intent.putExtra(KEY_LONGITUDE, latLng.longitude);
         startActivity(intent);
     }
 
     @Override
-    public void createSpotFailed(String message) {
+    public void showError(String message) {
         new android.support.v7.app.AlertDialog.Builder(requireActivity())
                 .setMessage(message)
                 .setPositiveButton("Ok", null)
@@ -200,12 +195,28 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
                 .show();
     }
 
+    @Override
+    public LatLngBounds getVisibleMap() {
+        if(mGoogleMap != null) {
+            return mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void clearMap() {
+        if(mGoogleMap != null) {
+            mGoogleMap.clear();
+        }
+    }
+
     public void focusCurrentLocation(Location location) {
         LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f));
     }
 
-    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMapClickListener {
         private SpotsFragment mSpotsFragment;
 
         MapListener(SpotsFragment fragment) {
@@ -220,8 +231,22 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public boolean onMarkerClick(Marker marker) {
-            Toast.makeText(mSpotsFragment.requireActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+            mSpotClicked = true;
             return false;
+        }
+
+        @Override
+        public void onMapClick(LatLng latLng) {
+            Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCameraIdle() {
+            if(!mSpotClicked) {
+                mPresenter.cameraMoved();
+            }
+
+            mSpotClicked = false;
         }
 
         private void vibrate(long duration) {

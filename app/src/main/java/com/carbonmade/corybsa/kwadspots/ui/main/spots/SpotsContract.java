@@ -7,6 +7,7 @@ import com.carbonmade.corybsa.kwadspots.ui.BaseView;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -15,8 +16,10 @@ interface SpotsContract {
         Marker drawMarker(MarkerOptions options);
         Circle drawCircle(CircleOptions options);
         void focusCurrentLocation(Location location);
-        void createSpotSuccess(String documentId, LatLng latLng);
-        void createSpotFailed(String message);
+        void createSpotSuccess(LatLng latLng);
+        void showError(String message);
+        LatLngBounds getVisibleMap();
+        void clearMap();
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -25,5 +28,7 @@ interface SpotsContract {
         void onPause();
         void onResume();
         void onDestroy();
+        void cameraMoved();
+        void mapReady();
     }
 }
