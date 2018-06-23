@@ -5,21 +5,21 @@ import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import javax.inject.Inject;
 
 @ActivityScoped
-public class HomePresenter implements HomeContract.Presenter {
-    private HomeContract.View mHomeView;
+final public class HomePresenter implements HomeContract.Presenter {
+    private HomeContract.View mView;
 
     @Inject
-    public HomePresenter() {
+    HomePresenter() {
 
     }
 
     @Override
     public void takeView(HomeContract.View view) {
-        mHomeView = view;
+        mView = view;
     }
 
     @Override
     public void dropView() {
-        mHomeView = null;
+        mView = null;
     }
 }

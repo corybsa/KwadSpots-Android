@@ -4,23 +4,26 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
+import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
+import com.carbonmade.corybsa.kwadspots.ui.create_spot.CreateSpotActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,8 +31,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.moshi.Moshi;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -40,13 +48,18 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback, SpotsContract.View {
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
+    public static final String KEY_DOCUMENT_ID = "Document ID";
+    public static final String KEY_LATITUDE = "Latitude";
+    public static final String KEY_LONGITUDE = "Longitude";
 
     @BindView(R.id.map_view) MapView mMapView;
 
     @Inject SpotsPresenter mPresenter;
+    @Inject Moshi mMoshi;
+    @Inject Picasso mPicasso;
 
     private GoogleMap mGoogleMap;
-    protected BottomSheetDialog mBottomSheetDialog;
+    private boolean mSpotClicked = false;
 
     @Inject
     public SpotsFragment() {}
@@ -72,6 +85,8 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         MapListener mapListener = new MapListener(this);
         mGoogleMap.setOnMapLongClickListener(mapListener);
         mGoogleMap.setOnMarkerClickListener(mapListener);
+        mGoogleMap.setOnCameraIdleListener(mapListener);
+        mGoogleMap.setInfoWindowAdapter(new SpotInfoWindow(getContext(), mMoshi, mPicasso));
         mPresenter.getCurrentLocation();
 
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -84,12 +99,15 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         ) {
             mGoogleMap.setMyLocationEnabled(true);
         }
+
+        mPresenter.mapReady();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        clearMap();
         mPresenter.onResume();
     }
 
@@ -98,10 +116,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         super.onPause();
         mMapView.onPause();
         mPresenter.onPause();
-
-        if(mBottomSheetDialog != null) {
-            mBottomSheetDialog.dismiss();
-        }
     }
 
     @Override
@@ -109,10 +123,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         super.onDestroy();
         mMapView.onDestroy();
         mPresenter.onDestroy();
-
-        if(mBottomSheetDialog != null) {
-            mBottomSheetDialog.dismiss();
-        }
     }
 
     @Override
@@ -179,8 +189,36 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public SpotsFragment getFragment() {
-        return this;
+    public void createSpotSuccess(LatLng latLng) {
+        Intent intent = new Intent(SpotsFragment.this.getActivity(), CreateSpotActivity.class);
+        intent.putExtra(KEY_LATITUDE, latLng.latitude);
+        intent.putExtra(KEY_LONGITUDE, latLng.longitude);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showError(String message) {
+        new android.support.v7.app.AlertDialog.Builder(requireActivity())
+                .setMessage(message)
+                .setPositiveButton("Ok", null)
+                .create()
+                .show();
+    }
+
+    @Override
+    public LatLngBounds getVisibleMap() {
+        if(mGoogleMap != null) {
+            return mGoogleMap.getProjection().getVisibleRegion().latLngBounds;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void clearMap() {
+        if(mGoogleMap != null) {
+            mGoogleMap.clear();
+        }
     }
 
     public void focusCurrentLocation(Location location) {
@@ -188,7 +226,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f));
     }
 
-    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMapClickListener {
         private SpotsFragment mSpotsFragment;
 
         MapListener(SpotsFragment fragment) {
@@ -197,33 +235,28 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public void onMapLongClick(LatLng latLng) {
-            vibrate(80);
-
-            mSpotsFragment.mBottomSheetDialog = new BottomSheetDialog(mSpotsFragment.requireContext());
-            View view = getLayoutInflater().inflate(R.layout.fragment_spots_actions, null);
-            mSpotsFragment.mBottomSheetDialog.setContentView(view);
-
-            Button button = (Button)view.findViewById(R.id.spots_actions_add_photo);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(mSpotsFragment.requireActivity(), "test", Toast.LENGTH_LONG).show();
-                }
-            });
-
-            mSpotsFragment.mBottomSheetDialog.show();
-
-            MarkerOptions options = new MarkerOptions()
-                    .position(latLng)
-                    .title("Test");
-            Marker marker = drawMarker(options);
+            vibrate(30);
+            mPresenter.onMarkerAdd(latLng);
         }
 
         @Override
         public boolean onMarkerClick(Marker marker) {
-            Toast.makeText(mSpotsFragment.requireActivity(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+            mSpotClicked = true;
             return false;
+        }
+
+        @Override
+        public void onMapClick(LatLng latLng) {
+            Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCameraIdle() {
+            if(!mSpotClicked) {
+                mPresenter.cameraMoved();
+            }
+
+            mSpotClicked = false;
         }
 
         private void vibrate(long duration) {
@@ -235,6 +268,44 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
                 } else {
                     vibrator.vibrate(duration);
                 }
+            }
+        }
+    }
+
+    class SpotInfoWindow implements GoogleMap.InfoWindowAdapter {
+        private Context mContext;
+        private Moshi mMoshi;
+        private Picasso mPicasso;
+
+        SpotInfoWindow(Context context, Moshi moshi, Picasso picasso) {
+            mContext = context;
+            mMoshi = moshi;
+            mPicasso = picasso;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            try {
+                LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.spot_info_window, null);
+                Spot spot = mMoshi.adapter(Spot.class).fromJson(marker.getSnippet());
+
+                TextView title = view.findViewById(R.id.spot_info_name);
+                ImageView picture = view.findViewById(R.id.spot_info_picture);
+
+                title.setText(spot.getName());
+                mPicasso.load(spot.getPicture())
+                        .placeholder(R.drawable.ic_ks_transparent)
+                        .into(picture);
+
+                return view;
+            } catch(IOException e) {
+                return null;
             }
         }
     }

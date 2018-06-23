@@ -6,17 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
+
     <ImageView
         android:id="@+id/ks_logo_compact"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ks_orange" />
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        app:srcCompat="@drawable/ic_ks_transparent" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_username"
@@ -29,14 +33,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ks_logo_compact">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
             android:hint="@string/edit_text_email_hint"
             android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
@@ -52,14 +52,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_layout_username">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
             android:hint="@string/edit_text_password_hint"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
@@ -75,16 +71,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_layout_password">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/password_verify"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
             android:hint="@string/edit_text_password_verify_hint"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:imeOptions="actionGo" />
     </android.support.design.widget.TextInputLayout>
 
     <Button
@@ -92,9 +85,7 @@
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="@string/text_sign_up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

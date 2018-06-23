@@ -1,9 +1,10 @@
 *.iml
 .gradle
-gradlew.bat
 .idea
-/local.properties
+.idea/misc.xml
 .DS_Store
+.externalNativeBuild
+gradlew.bat
+/local.properties
 /build
 /captures
-.externalNativeBuild

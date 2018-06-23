@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 @ActivityScoped
 public class SettingsPresenter implements SettingsContract.Presenter {
-    private SettingsContract.View mSettingsView;
+    private SettingsContract.View mView;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
@@ -20,11 +20,11 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
     @Override
     public void takeView(SettingsContract.View view) {
-        mSettingsView = view;
+        mView = view;
     }
 
     @Override
     public void dropView() {
-        mSettingsView = null;
+        mView = null;
     }
 }

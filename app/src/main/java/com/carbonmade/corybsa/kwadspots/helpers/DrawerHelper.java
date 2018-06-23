@@ -1,7 +1,6 @@
 package com.carbonmade.corybsa.kwadspots.helpers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.ui.login.LoginActivity;
@@ -19,8 +17,6 @@ import com.carbonmade.corybsa.kwadspots.ui.settings.SettingsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
-
-import javax.inject.Inject;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
@@ -49,7 +45,8 @@ public class DrawerHelper {
         drawerHeaderText.setText(headerText);
 
         Picasso.with(mActivity)
-                .load(R.drawable.ks_orange)
+                .load(R.drawable.ic_ks_transparent)
+                .resize(128, 128)
                 .transform(new CropCircleTransformation())
                 .into(drawerHeaderProfilePic);
 

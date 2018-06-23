@@ -17,4 +17,9 @@
         android:icon="@drawable/ic_place_black_24dp"
         android:title="@string/main_tab_spots" />
 
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/main_tab_profile" />
+
 </menu>

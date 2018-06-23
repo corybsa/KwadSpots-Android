@@ -2,7 +2,11 @@ package com.carbonmade.corybsa.kwadspots.di;
 
 import android.app.Application;
 
+import com.carbonmade.corybsa.kwadspots.helpers.FirebaseRequestHandler;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.storage.FirebaseStorage;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.moshi.Moshi;
 import com.squareup.picasso.Picasso;
@@ -30,8 +34,27 @@ public class NetworkModule {
 
     @Provides
     @Singleton
+    FirebaseStorage provideFirebaseStorage() {
+        return FirebaseStorage.getInstance();
+    }
+
+    @Provides
+    @Singleton
+    FirebaseFirestore provideFirebaseFirestore() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setTimestampsInSnapshotsEnabled(true)
+                .build();
+        firestore.setFirestoreSettings(settings);
+
+        return firestore;
+    }
+
+    @Provides
+    @Singleton
     Cache provideHttpCache(Application application) {
         int cacheSize = 10 * 1024 * 1024; // 10mb
+
         return new Cache(application.getCacheDir(), cacheSize);
     }
 
@@ -62,8 +85,9 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    Picasso providePicasso(Application app, OkHttpClient client) {
+    Picasso providePicasso(Application app, OkHttpClient client, FirebaseStorage storage) {
         return new Picasso.Builder(app)
+                .addRequestHandler(new FirebaseRequestHandler(storage))
                 .downloader(new OkHttp3Downloader(client))
                 .build();
     }

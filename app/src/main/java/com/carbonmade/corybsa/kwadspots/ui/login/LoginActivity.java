@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
 import com.carbonmade.corybsa.kwadspots.R;
-import com.carbonmade.corybsa.kwadspots.ui.signup.SignUpActivity;
+import com.carbonmade.corybsa.kwadspots.ui.password_reset.PasswordResetActivity;
+import com.carbonmade.corybsa.kwadspots.ui.sign_up.SignUpActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
@@ -34,13 +35,19 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginContr
     @Inject LoginPresenter mPresenter;
 
     @OnClick(R.id.login)
-    void onLoginClick(View view) {
+    void onLoginClick() {
         mPresenter.onLoginClicked(mEmail.getText().toString(), mPassword.getText().toString());
     }
 
     @OnClick(R.id.sign_up)
-    void onSignUpClick(View view) {
+    void onSignUpClick() {
         Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.forgot_password)
+    void onForgotClick() {
+        Intent intent = new Intent(this, PasswordResetActivity.class);
         startActivity(intent);
     }
 
@@ -59,7 +66,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginContr
                     switch(keyCode) {
                         case KeyEvent.KEYCODE_DPAD_CENTER:
                         case KeyEvent.KEYCODE_ENTER:
-                            onLoginClick(null);
+                            onLoginClick();
                             return true;
                         default:
                             return false;
@@ -99,8 +106,7 @@ public class LoginActivity extends DaggerAppCompatActivity implements LoginContr
     @Override
     public void onLoginSuccess() {
         mPresenter.dropView();
-        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-        finish();
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }
