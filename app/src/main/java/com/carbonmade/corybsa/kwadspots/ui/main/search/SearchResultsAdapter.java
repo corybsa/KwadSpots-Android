@@ -110,7 +110,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter {
         void bindView(int position) {
             SearchResult result = mData.get(position);
 
-            mPicasso.load(R.drawable.ic_ks_transparent)
+            mPicasso.load(result.getImage())
                     .placeholder(R.drawable.ic_ks_transparent)
                     .resize(48, 48)
                     .into(mSpotImage);

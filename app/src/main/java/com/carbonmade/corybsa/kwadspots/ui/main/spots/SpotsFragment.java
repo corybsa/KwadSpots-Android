@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +36,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.moshi.Moshi;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -57,6 +64,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     @Inject SpotsPresenter mPresenter;
     @Inject Moshi mMoshi;
     @Inject Picasso mPicasso;
+    @Inject FirebaseStorage mFirebaseStorage;
 
     private GoogleMap mGoogleMap;
     private boolean mSpotClicked = false;
@@ -82,10 +90,11 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
-        MapListener mapListener = new MapListener(this);
+        MapListener mapListener = new MapListener();
         mGoogleMap.setOnMapLongClickListener(mapListener);
         mGoogleMap.setOnMarkerClickListener(mapListener);
         mGoogleMap.setOnCameraIdleListener(mapListener);
+        mGoogleMap.setOnInfoWindowClickListener(mapListener);
         mGoogleMap.setInfoWindowAdapter(new SpotInfoWindow(getContext(), mMoshi, mPicasso));
         mPresenter.getCurrentLocation();
 
@@ -226,11 +235,9 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f));
     }
 
-    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMapClickListener {
-        private SpotsFragment mSpotsFragment;
+    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener {
+        MapListener() {
 
-        MapListener(SpotsFragment fragment) {
-            mSpotsFragment = fragment;
         }
 
         @Override
@@ -257,6 +264,11 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
             }
 
             mSpotClicked = false;
+        }
+
+        @Override
+        public void onInfoWindowClick(Marker marker) {
+            Toast.makeText(getActivity(), "InfoWindow clicked!", Toast.LENGTH_SHORT).show();
         }
 
         private void vibrate(long duration) {
@@ -289,24 +301,42 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         }
 
         @Override
-        public View getInfoContents(Marker marker) {
+        public View getInfoContents(final Marker marker) {
             try {
                 LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.spot_info_window, null);
-                Spot spot = mMoshi.adapter(Spot.class).fromJson(marker.getSnippet());
 
+                Spot spot = mMoshi.adapter(Spot.class).fromJson(marker.getSnippet());
                 TextView title = view.findViewById(R.id.spot_info_name);
                 ImageView picture = view.findViewById(R.id.spot_info_picture);
+                RatingBar rating = view.findViewById(R.id.spot_info_rating);
 
                 title.setText(spot.getName());
+                rating.setRating(spot.getRating());
+
                 mPicasso.load(spot.getPicture())
                         .placeholder(R.drawable.ic_ks_transparent)
-                        .into(picture);
+                        .resize(40, 40)
+                        .into(picture, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                if(marker.isInfoWindowShown()) {
+                                    marker.hideInfoWindow();
+                                    marker.showInfoWindow();
+                                }
+                            }
+
+                            @Override
+                            public void onError() {
+                            }
+                        });
 
                 return view;
             } catch(IOException e) {
                 return null;
             }
         }
+
+
     }
 }

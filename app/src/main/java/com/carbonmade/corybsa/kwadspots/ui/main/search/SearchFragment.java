@@ -83,16 +83,16 @@ public class SearchFragment extends DaggerFragment implements SearchContract.Vie
 
     void loadData() {
         List<SearchResult> fakeData = new ArrayList<>();
-        fakeData.add(new SearchResult("", "Savona", "I like to call this the wasteland."));
-        fakeData.add(new SearchResult("", "Angel's place", "Angel loves to host events at his house!"));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
-        fakeData.add(new SearchResult("", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "Savona", "I like to call this the wasteland."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "Angel's place", "Angel loves to host events at his house!"));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("https://firebasestorage.googleapis.com/v0/b/kwad-spots.appspot.com/o/images%2FJPEG_20180620_224133_434823034630874900.jpg?alt=media&token=e8d36600-37c9-492b-99c5-e178200124ff", "The Spot", "This is THE spot."));
 
         setupRecyclerView(fakeData);
     }
