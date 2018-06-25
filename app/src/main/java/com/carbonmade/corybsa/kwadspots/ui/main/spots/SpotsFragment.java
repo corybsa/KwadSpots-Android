@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -36,10 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.moshi.Moshi;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -55,7 +51,6 @@ import dagger.android.support.DaggerFragment;
 @ActivityScoped
 public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback, SpotsContract.View {
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
-    public static final String KEY_DOCUMENT_ID = "Document ID";
     public static final String KEY_LATITUDE = "Latitude";
     public static final String KEY_LONGITUDE = "Longitude";
 
@@ -67,7 +62,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     @Inject FirebaseStorage mFirebaseStorage;
 
     private GoogleMap mGoogleMap;
-    private boolean mSpotClicked = false;
 
     @Inject
     public SpotsFragment() {}
@@ -92,7 +86,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         mGoogleMap = googleMap;
         MapListener mapListener = new MapListener();
         mGoogleMap.setOnMapLongClickListener(mapListener);
-        mGoogleMap.setOnMarkerClickListener(mapListener);
         mGoogleMap.setOnCameraIdleListener(mapListener);
         mGoogleMap.setOnInfoWindowClickListener(mapListener);
         mGoogleMap.setInfoWindowAdapter(new SpotInfoWindow(getContext(), mMoshi, mPicasso));
@@ -235,7 +228,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15f));
     }
 
-    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMapClickListener, GoogleMap.OnInfoWindowClickListener {
+    public class MapListener implements GoogleMap.OnMapLongClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnInfoWindowClickListener {
         MapListener() {
 
         }
@@ -244,16 +237,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         public void onMapLongClick(LatLng latLng) {
             vibrate(30);
             mPresenter.onMarkerAdd(latLng);
-        }
-
-        @Override
-        public boolean onMarkerClick(Marker marker) {
-            return false;
-        }
-
-        @Override
-        public void onMapClick(LatLng latLng) {
-            Toast.makeText(getActivity(), "test", Toast.LENGTH_SHORT).show();
         }
 
         @Override
