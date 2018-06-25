@@ -248,7 +248,6 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public boolean onMarkerClick(Marker marker) {
-            mSpotClicked = true;
             return false;
         }
 
@@ -259,11 +258,9 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public void onCameraIdle() {
-            if(!mSpotClicked) {
+            if(mPresenter.isInfoWindowShown()) {
                 mPresenter.cameraMoved();
             }
-
-            mSpotClicked = false;
         }
 
         @Override

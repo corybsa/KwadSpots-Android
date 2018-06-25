@@ -30,5 +30,6 @@ interface SpotsContract {
         void onDestroy();
         void cameraMoved();
         void mapReady();
+        boolean isInfoWindowShown();
     }
 }

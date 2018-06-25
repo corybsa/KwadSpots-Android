@@ -187,6 +187,19 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
         mView = null;
     }
 
+    @Override
+    public boolean isInfoWindowShown() {
+        if(mMarkers != null) {
+            for(Marker marker : mMarkers) {
+                if(marker.isInfoWindowShown()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void startLocationUpdates() {
         if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
