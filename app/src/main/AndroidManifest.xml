@@ -23,11 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity"/>
         <activity android:name=".ui.create_spot.CreateSpotActivity"/>
-        <activity android:name=".ui.sign_up.SignUpActivity"/>
-        <activity android:name=".ui.settings.SettingsActivity"/>
+        <activity android:name=".ui.main.MainActivity"/>
         <activity android:name=".ui.password_reset.PasswordResetActivity"/>
+        <activity android:name=".ui.settings.SettingsActivity"/>
+        <activity android:name=".ui.sign_up.SignUpActivity"/>
+        <activity android:name=".ui.spot_info.SpotInfoActivity"/>
 
         <provider
             android:authorities="com.carbonmade.corybsa.kwadspots"

@@ -45,4 +45,12 @@ public class FirestoreHelper {
 
         return ref.get();
     }
+
+    public Task<QuerySnapshot> getSpotComments(String spotId) {
+        Query ref = mFirestore.collection(COLLECTION_SPOTS)
+                .document(spotId)
+                .collection(Spot.COLLECTION_COMMENTS);
+
+        return ref.get();
+    }
 }

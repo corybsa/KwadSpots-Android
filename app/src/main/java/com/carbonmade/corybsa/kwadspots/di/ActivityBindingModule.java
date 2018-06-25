@@ -12,6 +12,8 @@ import com.carbonmade.corybsa.kwadspots.ui.settings.SettingsActivity;
 import com.carbonmade.corybsa.kwadspots.ui.settings.SettingsModule;
 import com.carbonmade.corybsa.kwadspots.ui.sign_up.SignUpActivity;
 import com.carbonmade.corybsa.kwadspots.ui.sign_up.SignUpModule;
+import com.carbonmade.corybsa.kwadspots.ui.spot_info.SpotInfoActivity;
+import com.carbonmade.corybsa.kwadspots.ui.spot_info.SpotInfoModule;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
@@ -19,26 +21,30 @@ import dagger.android.ContributesAndroidInjector;
 @Module
 public abstract class ActivityBindingModule {
     @ActivityScoped
+    @ContributesAndroidInjector(modules = CreateSpotModule.class)
+    abstract CreateSpotActivity createSpotActivity();
+
+    @ActivityScoped
     @ContributesAndroidInjector(modules = LoginModule.class)
     abstract LoginActivity loginActivity();
-
-    @ActivityScoped
-    @ContributesAndroidInjector(modules = SignUpModule.class)
-    abstract SignUpActivity signUpActivity();
-
-    @ActivityScoped
-    @ContributesAndroidInjector(modules = PasswordResetModule.class)
-    abstract PasswordResetActivity passwordResetActivity();
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = MainModule.class)
     abstract MainActivity mainActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = CreateSpotModule.class)
-    abstract CreateSpotActivity createSpotActivity();
+    @ContributesAndroidInjector(modules = PasswordResetModule.class)
+    abstract PasswordResetActivity passwordResetActivity();
 
     @ActivityScoped
     @ContributesAndroidInjector(modules = SettingsModule.class)
     abstract SettingsActivity settingsActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = SignUpModule.class)
+    abstract SignUpActivity signUpActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = SpotInfoModule.class)
+    abstract SpotInfoActivity spotInfoActivity();
 }

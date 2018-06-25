@@ -25,6 +25,7 @@ import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.carbonmade.corybsa.kwadspots.ui.create_spot.CreateSpotActivity;
+import com.carbonmade.corybsa.kwadspots.ui.spot_info.SpotInfoActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -53,6 +54,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
     public static final int PERMISSION_LOCATION_ACCESS_LOCATION = 1;
     public static final String KEY_LATITUDE = "Latitude";
     public static final String KEY_LONGITUDE = "Longitude";
+    public static final String KEY_SPOT = "Spot";
 
     @BindView(R.id.map_view) MapView mMapView;
 
@@ -248,7 +250,9 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public void onInfoWindowClick(Marker marker) {
-            Toast.makeText(getActivity(), "InfoWindow clicked!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), SpotInfoActivity.class);
+            intent.putExtra(KEY_SPOT, marker.getSnippet());
+            startActivity(intent);
         }
 
         private void vibrate(long duration) {

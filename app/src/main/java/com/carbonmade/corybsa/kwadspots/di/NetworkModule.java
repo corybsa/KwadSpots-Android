@@ -73,7 +73,7 @@ public class NetworkModule {
         return new OkHttpClient.Builder()
                 .cache(cache)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+//                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
                 .build();
     }
 

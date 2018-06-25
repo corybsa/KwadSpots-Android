@@ -11,6 +11,7 @@ public class Spot {
     public static final String FIELD_PICTURE = "picture";
     public static final String FIELD_RATING = "rating";
     public static final String FIELD_TYPE = "type";
+    public static final String COLLECTION_COMMENTS = "comments";
 
     @Json(name = "id")
     private String mId;
