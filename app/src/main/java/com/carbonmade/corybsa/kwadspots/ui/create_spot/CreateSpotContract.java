@@ -16,6 +16,7 @@ interface CreateSpotContract {
         HashMap<String, Object> getSpot();
         void showThumbnail(Bitmap spotBitmap);
         void showProgress(int progress);
+        void showError(String message);
         void setProgress(double progress);
     }
 

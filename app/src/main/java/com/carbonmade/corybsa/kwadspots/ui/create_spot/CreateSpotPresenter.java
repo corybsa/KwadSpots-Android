@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Toast;
 
+import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.carbonmade.corybsa.kwadspots.helpers.FirestoreHelper;
 import com.carbonmade.corybsa.kwadspots.helpers.StorageHelper;
@@ -105,16 +106,19 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
 
     @Override
     public void createSpot(File spotImageFile) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        mSpotBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        if(spotImageFile != null) {
+            UploadListener uploadListener = new UploadListener();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            mSpotBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
-        UploadListener uploadListener = new UploadListener();
-
-        mView.showProgress(0);
-        mStorageHelper.upload(spotImageFile.getName(), stream.toByteArray())
-                .addOnSuccessListener(uploadListener)
-                .addOnFailureListener(uploadListener)
-                .addOnProgressListener(uploadListener);
+            mView.showProgress(0);
+            mStorageHelper.upload(spotImageFile.getName(), stream.toByteArray())
+                    .addOnSuccessListener(uploadListener)
+                    .addOnFailureListener(uploadListener)
+                    .addOnProgressListener(uploadListener);
+        } else {
+            createSpot();
+        }
     }
 
     @Override
@@ -133,28 +137,35 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         ActivityCompat.requestPermissions(mActivity, permissions, PERMISSION_CAMERA);
     }
 
+    private void createSpot() {
+        HashMap<String, Object> spot = mView.getSpot();
+
+        if(!spot.containsKey(Spot.FIELD_NAME) || spot.get(Spot.FIELD_NAME).toString().isEmpty()) {
+            mView.showError("The spot must have a name.");
+            return;
+        }
+
+        if(!spot.containsKey(Spot.FIELD_TYPE) || (int)spot.get(Spot.FIELD_TYPE) < 0) {
+            mView.showError("The spot must have a type.");
+            return;
+        }
+
+        if(!spot.containsKey(Spot.FIELD_RATING) || (float)spot.get(Spot.FIELD_RATING) == 0.0f) {
+            mView.showError("The spot must have a rating.");
+            return;
+        }
+
+        FirestoreListener listener = new FirestoreListener();
+
+        mFirestoreHelper.putSpot(mView.getSpot())
+                .addOnSuccessListener(listener)
+                .addOnFailureListener(listener);
+    }
+
     class UploadListener implements OnSuccessListener<UploadTask.TaskSnapshot>, OnFailureListener, OnProgressListener<UploadTask.TaskSnapshot> {
         @Override
         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-            HashMap<String, Object> spot = mView.getSpot();
-
-            mFirestoreHelper.putSpot(spot)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            mActivity.finish();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            new AlertDialog.Builder(mActivity)
-                                    .setMessage(e.getMessage())
-                                    .setPositiveButton("Ok", null)
-                                    .create()
-                                    .show();
-                        }
-                    });
+            createSpot();
         }
 
         @Override
@@ -166,6 +177,18 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
             mView.setProgress(progress);
+        }
+    }
+
+    class FirestoreListener implements OnSuccessListener<DocumentReference>, OnFailureListener {
+        @Override
+        public void onSuccess(DocumentReference documentReference) {
+            mActivity.finish();
+        }
+
+        @Override
+        public void onFailure(@NonNull Exception e) {
+            mView.showError(e.getMessage());
         }
     }
 }

@@ -14,9 +14,7 @@
 
         <include
             android:id="@+id/include"
-            layout="@layout/toolbar"
-            tools:layout_editor_absoluteX="29dp"
-            tools:layout_editor_absoluteY="101dp" />
+            layout="@layout/toolbar" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/spot_picture_layout"

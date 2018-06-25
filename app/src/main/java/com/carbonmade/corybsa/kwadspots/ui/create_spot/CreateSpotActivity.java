@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -156,6 +157,15 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     }
 
     @Override
+    public void showError(String message) {
+        new AlertDialog.Builder(this)
+                .setMessage(message)
+                .setPositiveButton("Ok", null)
+                .create()
+                .show();
+    }
+
+    @Override
     public void setProgress(double progress) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mProgressBar.setProgress((int)progress, true);
@@ -167,7 +177,11 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     @Override
     public HashMap<String, Object> getSpot() {
         HashMap<String, Object> spot = new HashMap<>();
-        spot.put(Spot.FIELD_PICTURE, mSpotImageFile.getName());
+
+        if(mSpotImageFile != null) {
+            spot.put(Spot.FIELD_PICTURE, mSpotImageFile.getName());
+        }
+
         spot.put(Spot.FIELD_NAME, mSpotName.getText().toString());
         spot.put(Spot.FIELD_TYPE, mSpotType.getSelectedItemPosition());
         spot.put(Spot.FIELD_RATING, mSpotRating.getRating());
