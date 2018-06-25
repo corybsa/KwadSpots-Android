@@ -243,7 +243,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
         @Override
         public void onCameraIdle() {
-            if(mPresenter.isInfoWindowShown()) {
+            if(!mPresenter.isInfoWindowShown()) {
                 mPresenter.cameraMoved();
             }
         }
