@@ -214,7 +214,7 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     }
 
     private void getSpots() {
-        LatLngBounds bounds = mView.getVisibleMap();
+        final LatLngBounds bounds = mView.getVisibleMap();
 
         if(bounds != null) {
             mFirestoreHelper.getSpots(bounds)
@@ -226,6 +226,15 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
 
                                 for(QueryDocumentSnapshot document : task.getResult()) {
                                     Spot spot = new Spot(document);
+                                    double top = bounds.northeast.latitude;
+                                    double bottom = bounds.southwest.latitude;
+
+                                    // Longitude is already filtered, need to filter latitude.
+                                    // If the spot is above the top, or below the bottom, ignore it.
+                                    if(spot.getLatitude() > top || spot.getLatitude() < bottom) {
+                                        continue;
+                                    }
+
                                     MarkerOptions options = new MarkerOptions();
                                     options.position(new LatLng(spot.getLatitude(), spot.getLongitude()));
                                     options.title(spot.getName());
