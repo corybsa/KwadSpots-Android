@@ -78,6 +78,10 @@ public class Spot {
     }
 
     public String getPicture() {
+        if(mPicture == null || mPicture.isEmpty()) {
+            return null;
+        }
+
         return "gs://kwad-spots.appspot.com/images/" + mPicture;
     }
 
