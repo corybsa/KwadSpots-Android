@@ -63,17 +63,19 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
         String spotJson = intent.getStringExtra(SpotsFragment.KEY_SPOT);
 
         try {
+            mSpot = mMoshi.adapter(Spot.class).fromJson(spotJson);
+
             if(actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setTitle(mSpot.getName());
             }
 
             mPresenter.takeView(this);
-            mSpot = mMoshi.adapter(Spot.class).fromJson(spotJson);
 
             mSpotName.setText(mSpot.getName());
             mSpotComment.setText(mSpot.getComment());
             mSpotRating.setRating(mSpot.getRating());
+            // TODO: make image bigger.
             mPicasso.load(mSpot.getPicture())
                     .placeholder(R.drawable.ic_ks_transparent)
                     .resize(48, 48)

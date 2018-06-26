@@ -102,6 +102,7 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
         SpotInfoItemViewHolder(View view) {
             super(view);
             mComment = view.findViewById(R.id.spot_info_comments_comment);
+            // TODO: get the actual name of the person who created the comment.
             mCreatedBy = view.findViewById(R.id.spot_info_comments_name);
             mCreatedDate = view.findViewById(R.id.spot_info_comments_date);
             view.setOnClickListener(this);

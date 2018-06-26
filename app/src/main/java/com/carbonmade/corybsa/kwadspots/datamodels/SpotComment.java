@@ -7,7 +7,7 @@ import java.util.Date;
 public class SpotComment {
     public static final String FIELD_CREATED_BY = "createdBy";
     public static final String FIELD_COMMENT = "comment";
-    public static final String FIELD_CREATED_DATE = "createdDate";
+    public static final String FIELD_CREATED_DATE = "date";
     public static final String DATE_FORMAT = "MM/dd/yy hh:mm a";
 
     private String mId;
