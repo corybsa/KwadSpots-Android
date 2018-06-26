@@ -80,6 +80,14 @@ public class SpotService {
         return ref.get();
     }
 
+    public Task<Void> updateSpot(String spotId, HashMap<String, Object> spot) {
+        return mFirestore.collection(COLLECTION_SPOTS).document(spotId).update(spot);
+    }
+
+    public Task<Void> deleteSpot(String spotId) {
+        return mFirestore.collection(COLLECTION_SPOTS).document(spotId).delete();
+    }
+
     public Task<QuerySnapshot> getSpotComments(String spotId) {
         Query ref = mFirestore.collection(COLLECTION_SPOTS)
                 .document(spotId)
