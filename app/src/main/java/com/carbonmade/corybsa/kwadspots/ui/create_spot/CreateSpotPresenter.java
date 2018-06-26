@@ -1,26 +1,23 @@
 package com.carbonmade.corybsa.kwadspots.ui.create_spot;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.carbonmade.corybsa.kwadspots.helpers.FirestoreHelper;
 import com.carbonmade.corybsa.kwadspots.helpers.StorageHelper;
+import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -46,24 +43,26 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
 
     private CreateSpotContract.View mView;
     private CreateSpotActivity mActivity;
-    private StorageHelper mStorageHelper;
+//    private StorageHelper mStorageHelper;
     private FirestoreHelper mFirestoreHelper;
     private Bitmap mSpotBitmap;
 
+    @Inject SpotService mStorageHelper;
+
     @Inject
     CreateSpotPresenter(FirebaseStorage storage, FirebaseFirestore firestore) {
-        mStorageHelper = new StorageHelper(storage);
+//        mStorageHelper = new StorageHelper(storage);
         mFirestoreHelper = new FirestoreHelper(firestore);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        mStorageHelper.onSaveInstanceState(outState);
+//        mStorageHelper.onSaveInstanceState(outState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-        mStorageHelper.restoreUploadState(mActivity, savedInstanceState);
+//        mStorageHelper.restoreUploadState(mActivity, savedInstanceState);
     }
 
     @Override
