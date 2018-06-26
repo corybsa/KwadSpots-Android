@@ -2,11 +2,18 @@ package com.carbonmade.corybsa.kwadspots.ui.spot_info;
 
 import android.support.annotation.NonNull;
 
+import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
 import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -26,13 +33,19 @@ final public class SpotInfoPresenter implements SpotInfoContract.Presenter {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        // TODO: tell the view the comments are loaded
+                        List<SpotComment> comments = new ArrayList<>();
+
+                        for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            comments.add(new SpotComment(documentSnapshot));
+                        }
+
+                        mView.loadComments(comments);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // TODO: tell the view there was an error
+                        mView.showError(e.getMessage());
                     }
                 });
     }

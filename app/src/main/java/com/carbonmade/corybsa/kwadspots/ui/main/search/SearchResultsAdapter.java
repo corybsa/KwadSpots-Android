@@ -1,6 +1,7 @@
 package com.carbonmade.corybsa.kwadspots.ui.main.search;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,14 +33,15 @@ public class SearchResultsAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         mContext = parent.getContext();
 
         if(viewType == VIEW_ITEM) {
-            mDataView = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_result_item, parent, false);
+            mDataView = LayoutInflater.from(mContext).inflate(R.layout.search_result_item, parent, false);
             return new SearchResultItemViewHolder(mDataView);
         } else {
-            mProgressBarView = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_result_loading, parent, false);
+            mProgressBarView = LayoutInflater.from(mContext).inflate(R.layout.search_result_loading, parent, false);
             return new SearchResultLoadingViewHolder(mProgressBarView);
         }
     }

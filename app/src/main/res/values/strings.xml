@@ -29,4 +29,6 @@
     <string name="toolbar_action_create">Create</string>
     <string name="add_a_picture">Add a picture</string>
     <string name="edit_text_spot_comment_hint">Comment</string>
+    <string name="spot_picture_description">Spot Image</string>
+    <string name="toolbar_action_comment">Add Comment</string>
 </resources>
