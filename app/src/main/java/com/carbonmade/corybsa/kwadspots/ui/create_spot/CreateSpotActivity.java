@@ -29,6 +29,7 @@ import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsPresenter;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -151,9 +152,15 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     }
 
     @Override
-    public void showProgress(int progress) {
+    public void showProgress(int progress, boolean indeterminate) {
         mProgressBar.setVisibility(View.VISIBLE);
-        mProgressBar.setProgress(progress);
+        mProgressBar.setIndeterminate(indeterminate);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mProgressBar.setProgress(progress, true);
+        } else {
+            mProgressBar.setProgress(progress);
+        }
     }
 
     @Override
@@ -163,15 +170,6 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
                 .setPositiveButton("Ok", null)
                 .create()
                 .show();
-    }
-
-    @Override
-    public void setProgress(double progress) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mProgressBar.setProgress((int)progress, true);
-        } else {
-            mProgressBar.setProgress((int)progress);
-        }
     }
 
     @Override
@@ -192,6 +190,7 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
         return spot;
     }
 
+    @Override
     public void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getPackageManager()) != null) {

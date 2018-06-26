@@ -15,9 +15,8 @@ interface CreateSpotContract {
         void openCamera();
         HashMap<String, Object> getSpot();
         void showThumbnail(Bitmap spotBitmap);
-        void showProgress(int progress);
+        void showProgress(int progress, boolean indeterminate);
         void showError(String message);
-        void setProgress(double progress);
     }
 
     interface Presenter extends BasePresenter<View> {

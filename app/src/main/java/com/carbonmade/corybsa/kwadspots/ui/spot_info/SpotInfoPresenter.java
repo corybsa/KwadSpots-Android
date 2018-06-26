@@ -3,10 +3,9 @@ package com.carbonmade.corybsa.kwadspots.ui.spot_info;
 import android.support.annotation.NonNull;
 
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
-import com.carbonmade.corybsa.kwadspots.helpers.FirestoreHelper;
+import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import javax.inject.Inject;
@@ -14,18 +13,16 @@ import javax.inject.Inject;
 @ActivityScoped
 final public class SpotInfoPresenter implements SpotInfoContract.Presenter {
     private SpotInfoContract.View mView;
-    private FirebaseFirestore mFirestore;
-    private FirestoreHelper mFirestoreHelper;
+
+    @Inject SpotService mSpotService;
 
     @Inject
-    SpotInfoPresenter(FirebaseFirestore firestore) {
-        mFirestore = firestore;
-        mFirestoreHelper = new FirestoreHelper(mFirestore);
+    SpotInfoPresenter() {
     }
 
     @Override
     public void loadComments(String spotId) {
-        mFirestoreHelper.getSpotComments(spotId)
+        mSpotService.getSpotComments(spotId)
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {

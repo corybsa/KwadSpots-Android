@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,14 +16,10 @@ import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
-import com.carbonmade.corybsa.kwadspots.helpers.FirestoreHelper;
-import com.carbonmade.corybsa.kwadspots.helpers.StorageHelper;
 import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.UploadTask;
 
@@ -43,26 +40,25 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
 
     private CreateSpotContract.View mView;
     private CreateSpotActivity mActivity;
-//    private StorageHelper mStorageHelper;
-    private FirestoreHelper mFirestoreHelper;
     private Bitmap mSpotBitmap;
 
-    @Inject SpotService mStorageHelper;
+    @Inject SpotService mSpotService;
 
     @Inject
-    CreateSpotPresenter(FirebaseStorage storage, FirebaseFirestore firestore) {
-//        mStorageHelper = new StorageHelper(storage);
-        mFirestoreHelper = new FirestoreHelper(firestore);
-    }
+    CreateSpotPresenter() {}
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-//        mStorageHelper.onSaveInstanceState(outState);
+        mSpotService.onSaveInstanceState(outState);
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
-//        mStorageHelper.restoreUploadState(mActivity, savedInstanceState);
+        UploadListener uploadListener = new UploadListener();
+        mSpotService.restoreUploadState(savedInstanceState)
+                .addOnSuccessListener(uploadListener)
+                .addOnFailureListener(uploadListener)
+                .addOnProgressListener(uploadListener);
     }
 
     @Override
@@ -106,15 +102,7 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
     @Override
     public void createSpot(File spotImageFile) {
         if(spotImageFile != null) {
-            UploadListener uploadListener = new UploadListener();
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            mSpotBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-
-            mView.showProgress(0);
-            mStorageHelper.upload(spotImageFile.getName(), stream.toByteArray())
-                    .addOnSuccessListener(uploadListener)
-                    .addOnFailureListener(uploadListener)
-                    .addOnProgressListener(uploadListener);
+            new ImageCompresser(spotImageFile.getName()).execute();
         } else {
             createSpot();
         }
@@ -156,7 +144,7 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
 
         FirestoreListener listener = new FirestoreListener();
 
-        mFirestoreHelper.putSpot(mView.getSpot())
+        mSpotService.putSpot(mView.getSpot())
                 .addOnSuccessListener(listener)
                 .addOnFailureListener(listener);
     }
@@ -175,7 +163,7 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         @Override
         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            mView.setProgress(progress);
+            mView.showProgress((int)progress, false);
         }
     }
 
@@ -188,6 +176,40 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         @Override
         public void onFailure(@NonNull Exception e) {
             mView.showError(e.getMessage());
+        }
+    }
+
+    class ImageCompresser extends AsyncTask<Void, Integer, ByteArrayOutputStream> {
+        private String mFilename;
+
+        ImageCompresser(String fileName) {
+            mFilename = fileName;
+        }
+
+        @Override
+        protected void onPostExecute(ByteArrayOutputStream stream) {
+            super.onPostExecute(stream);
+            UploadListener uploadListener = new UploadListener();
+
+            mView.showProgress(0, false);
+            mSpotService.upload(mFilename, stream.toByteArray())
+                    .addOnSuccessListener(uploadListener)
+                    .addOnFailureListener(uploadListener)
+                    .addOnProgressListener(uploadListener);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            mView.showProgress(values[values.length - 1], true);
+        }
+
+        @Override
+        protected ByteArrayOutputStream doInBackground(Void... v) {
+            publishProgress(0);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            mSpotBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            return stream;
         }
     }
 }

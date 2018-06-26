@@ -1,5 +1,6 @@
-package com.carbonmade.corybsa.kwadspots.services;
+package com.carbonmade.corybsa.kwadspots.di;
 
+import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.google.firebase.storage.FirebaseStorage;
 
 import javax.inject.Singleton;
@@ -11,7 +12,7 @@ import dagger.Provides;
 public abstract class ServicesModule {
     @Provides
     @Singleton
-    SpotService provideSpotService(FirebaseStorage firebaseStorage) {
-        return new SpotService(firebaseStorage);
+    SpotService provideSpotService() {
+        return new SpotService();
     }
 }

@@ -19,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;

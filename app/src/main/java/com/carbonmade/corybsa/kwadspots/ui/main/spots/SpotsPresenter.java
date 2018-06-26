@@ -13,7 +13,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
-import com.carbonmade.corybsa.kwadspots.helpers.FirestoreHelper;
+import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,7 +32,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.moshi.Moshi;
@@ -57,18 +56,15 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
     private boolean mRequestingLocationUpdates;
     private Context mContext;
     private Activity mActivity;
-    private FirebaseFirestore mFirestore;
-    private FirestoreHelper mFirestoreHelper;
     private List<Marker> mMarkers;
-    private Moshi mMoshi;
+
+    @Inject SpotService mSpotService;
+    @Inject Moshi mMoshi;
 
     @Inject
-    SpotsPresenter(Context context, MainActivity activity, FirebaseFirestore firestore, Moshi moshi) {
+    SpotsPresenter(Context context, MainActivity activity) {
         mContext = context;
         mActivity = activity;
-        mFirestore = firestore;
-        mFirestoreHelper = new FirestoreHelper(mFirestore);
-        mMoshi = moshi;
         mMarkers = new ArrayList<>();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
         mLocationRequest = new LocationRequest();
@@ -230,7 +226,7 @@ final public class SpotsPresenter implements SpotsContract.Presenter, LocationLi
         final LatLngBounds bounds = mView.getVisibleMap();
 
         if(bounds != null) {
-            mFirestoreHelper.getSpots(bounds)
+            mSpotService.getSpots(bounds)
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
