@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private View mDataView;
     private List<SpotComment> mData;
+    private View mProgressBarView;
 
     @Override
     @NonNull
@@ -33,13 +35,25 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
 
         if(viewType == VIEW_ITEM) {
             mDataView = LayoutInflater.from(mContext).inflate(R.layout.spot_info_comment_item, parent, false);
-            return new
+            return new SpotInfoItemViewHolder(mDataView);
+        } else {
+            mProgressBarView = LayoutInflater.from(mContext).inflate(R.layout.search_result_loading, parent, false);
+            return new SpotInfoLoadingViewHolder(mProgressBarView);
         }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // TODO: finish this method.
+    }
 
+    class SpotInfoLoadingViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
+
+        SpotInfoLoadingViewHolder(View view) {
+            super(view);
+            progressBar = view.findViewById(R.id.search_result_loading);
+        }
     }
 
     class SpotInfoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
