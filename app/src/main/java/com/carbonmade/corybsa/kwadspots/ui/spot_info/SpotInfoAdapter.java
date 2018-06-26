@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +25,10 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
     private View mDataView;
     private List<SpotComment> mData;
     private View mProgressBarView;
+
+    SpotInfoAdapter(List<SpotComment> comments) {
+        mData = comments;
+    }
 
     @Override
     @NonNull
@@ -43,8 +45,44 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        // TODO: finish this method.
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if(holder instanceof SpotInfoItemViewHolder) {
+            ((SpotInfoItemViewHolder)holder).bindView(position);
+        } else if(holder instanceof SpotInfoLoadingViewHolder) {
+            SpotInfoLoadingViewHolder spotInfoLoadingViewHolder = (SpotInfoLoadingViewHolder)holder;
+            spotInfoLoadingViewHolder.progressBar.setVisibility(View.VISIBLE);
+            spotInfoLoadingViewHolder.progressBar.setIndeterminate(true);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mData.size() + 1;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position >= mData.size()) {
+            return VIEW_LOADING;
+        }
+
+        return VIEW_ITEM;
+    }
+
+    void hideProgressBar() {
+        mProgressBarView.findViewById(R.id.search_result_loading).setVisibility(View.GONE);
+    }
+
+    void showProgressBar() {
+        mProgressBarView.findViewById(R.id.search_result_loading).setVisibility(View.VISIBLE);
+    }
+
+    void addData(List<SpotComment> data) {
+        mData.addAll(data);
+    }
+
+    public void setData(List<SpotComment> data) {
+        mData = data;
     }
 
     class SpotInfoLoadingViewHolder extends RecyclerView.ViewHolder {

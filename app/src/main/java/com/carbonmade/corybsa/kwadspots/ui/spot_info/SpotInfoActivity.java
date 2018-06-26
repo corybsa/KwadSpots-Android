@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -21,8 +22,6 @@ import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
 import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.moshi.Moshi;
 import com.squareup.picasso.Picasso;
 
@@ -47,6 +46,8 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
     @Inject Moshi mMoshi;
     @Inject Picasso mPicasso;
     @Inject SpotService mSpotService;
+
+    private SpotInfoAdapter mSpotInfoAdapter;
 
     private Spot mSpot;
 
@@ -85,8 +86,24 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
     }
 
     @Override
-    public void loadComments(List<SpotComment> comments) {
-        // TODO: set up recycler view
+    public void loadComments(final List<SpotComment> comments) {
+        mSpotInfoAdapter = new SpotInfoAdapter(comments);
+        final RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mSpotInfoAdapter);
+        mRecyclerView.setLayoutManager(manager);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if(((LinearLayoutManager)manager).findLastVisibleItemPosition() == comments.size()) {
+                    mPresenter.loadMore(mSpot.getId());
+                }
+            }
+        });
     }
 
     @Override

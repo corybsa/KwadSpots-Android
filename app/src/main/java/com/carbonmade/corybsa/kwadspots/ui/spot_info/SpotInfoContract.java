@@ -14,5 +14,6 @@ interface SpotInfoContract {
 
     interface Presenter extends BasePresenter<View> {
         void loadComments(String spotId);
+        void loadMore(String spotId);
     }
 }

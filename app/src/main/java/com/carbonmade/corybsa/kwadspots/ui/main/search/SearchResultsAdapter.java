@@ -47,7 +47,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof SearchResultItemViewHolder) {
             ((SearchResultItemViewHolder)holder).bindView(position);
         } else if(holder instanceof SearchResultLoadingViewHolder) {

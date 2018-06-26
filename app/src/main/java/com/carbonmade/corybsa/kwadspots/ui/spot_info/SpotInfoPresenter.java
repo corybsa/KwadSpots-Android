@@ -51,6 +51,11 @@ final public class SpotInfoPresenter implements SpotInfoContract.Presenter {
     }
 
     @Override
+    public void loadMore(String spotId) {
+        // TODO: figure this out...
+    }
+
+    @Override
     public void takeView(SpotInfoContract.View view) {
         mView = view;
     }
