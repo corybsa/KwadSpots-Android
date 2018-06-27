@@ -105,8 +105,7 @@ public class SearchFragment extends DaggerFragment implements SearchContract.Vie
         if(count == mSearchResultsAdapter.getItemCount()) {
             mSearchResultsAdapter.hideProgressBar();
         } else {
-            LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(requireContext(), R.anim.item_animation_slide_from_bottom);
-            mRecyclerView.setLayoutAnimation(controller);
+            mRecyclerView.setLayoutAnimation(null);
             mSearchResultsAdapter.showProgressBar();
             mSearchResultsAdapter.notifyDataSetChanged();
             mRecyclerView.scheduleLayoutAnimation();
