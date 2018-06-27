@@ -109,6 +109,21 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
     }
 
     @Override
+    public void loadMore(List<SpotComment> comments) {
+        int count = mSpotInfoAdapter.getItemCount();
+        mSpotInfoAdapter.addData(comments);
+
+        if(count == mSpotInfoAdapter.getItemCount()) {
+            mSpotInfoAdapter.hideProgressBar();
+        } else {
+            mRecyclerView.setLayoutAnimation(null);
+            mSpotInfoAdapter.showProgressBar();
+            mSpotInfoAdapter.notifyDataSetChanged();
+            mRecyclerView.scheduleLayoutAnimation();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.spot_info_toolbar, menu);
         Drawable icon = getResources().getDrawable(R.drawable.ic_edit_black_24dp);

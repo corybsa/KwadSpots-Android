@@ -10,6 +10,7 @@ interface SpotInfoContract {
     interface View extends BaseView<Presenter> {
         void showError(String message);
         void loadComments(List<SpotComment> comments);
+        void loadMore(List<SpotComment> comments);
     }
 
     interface Presenter extends BasePresenter<View> {

@@ -50,7 +50,11 @@ final public class SpotInfoPresenter implements SpotInfoContract.Presenter {
 
     @Override
     public void loadMore(String spotId) {
-        // TODO: figure this out...
+        List<SpotComment> comments = new ArrayList<>();
+
+        // TODO: figure out how to paginate data with firestore.
+
+        mView.loadMore(comments);
     }
 
     @Override
