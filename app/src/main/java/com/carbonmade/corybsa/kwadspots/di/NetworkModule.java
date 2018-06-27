@@ -19,13 +19,9 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.converter.moshi.MoshiConverterFactory;
 
 @Module
 public class NetworkModule {
-    private static final String mBaseUrl = "";
-
     @Provides
     @Singleton
     FirebaseAuth provideFirebaseAuth() {
@@ -70,16 +66,6 @@ public class NetworkModule {
         return new OkHttpClient.Builder()
                 .cache(cache)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .build();
-    }
-
-    @Provides
-    @Singleton
-    Retrofit provideRetrofit(Moshi moshi, OkHttpClient client) {
-        return new Retrofit.Builder()
-                .addConverterFactory(MoshiConverterFactory.create(moshi))
-                .baseUrl(mBaseUrl)
-                .client(client)
                 .build();
     }
 
