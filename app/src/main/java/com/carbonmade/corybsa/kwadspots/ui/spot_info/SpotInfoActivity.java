@@ -39,6 +39,7 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
     @BindView(R.id.spot_image) ImageView mSpotImage;
     @BindView(R.id.spot_name) TextView mSpotName;
     @BindView(R.id.spot_comment) TextView mSpotComment;
+    @BindView(R.id.spot_type) TextView mSpotType;
     @BindView(R.id.spot_rating) RatingBar mSpotRating;
     @BindView(R.id.spot_comments) RecyclerView mRecyclerView;
 
@@ -64,6 +65,7 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
 
         try {
             mSpot = mMoshi.adapter(Spot.class).fromJson(spotJson);
+            String[] spotTypes = getResources().getStringArray(R.array.spots_array);
 
             if(actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
@@ -75,10 +77,9 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
             mSpotName.setText(mSpot.getName());
             mSpotComment.setText(mSpot.getComment());
             mSpotRating.setRating(mSpot.getRating());
-            // TODO: make image bigger.
+            mSpotType.setText(spotTypes[(int)mSpot.getType()]);
             mPicasso.load(mSpot.getPicture())
                     .placeholder(R.drawable.ic_ks_transparent)
-                    .resize(48, 48)
                     .into(mSpotImage);
 
             mPresenter.loadComments(mSpot.getId());

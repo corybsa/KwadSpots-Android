@@ -14,7 +14,7 @@ import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
 import com.carbonmade.corybsa.kwadspots.services.SpotService;
 
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -117,7 +117,50 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
 
             mComment.setText(comment.getComment());
             mUser.setText(comment.getCreatedBy());
-            mDate.setText(new SimpleDateFormat(SpotComment.DATE_FORMAT, Locale.US).format(comment.getCreatedDate()));
+            mDate.setText(getDateDifference(comment.getCreatedDate(), new Date()));
+        }
+
+        private String getDateDifference(Date startDate, Date endDate) {
+            long different = endDate.getTime() - startDate.getTime();
+            long secondsInMilli = 1000;
+            long minutesInMilli = secondsInMilli * 60;
+            long hoursInMilli = minutesInMilli * 60;
+            long daysInMilli = hoursInMilli * 24;
+
+            long elapsedDays = different / daysInMilli;
+            different = different % daysInMilli;
+
+            long elapsedHours = different / hoursInMilli;
+            different = different % hoursInMilli;
+
+            long elapsedMinutes = different / minutesInMilli;
+            different = different % minutesInMilli;
+
+            long elapsedSeconds = different / secondsInMilli;
+
+            if(elapsedDays > 1) {
+                return String.format(Locale.US, "%d days ago", elapsedDays);
+            } else if(elapsedDays == 1) {
+                return String.format(Locale.US, "%d day ago", elapsedDays);
+            }
+
+            if(elapsedHours > 1) {
+                return String.format(Locale.US, "%d hours ago", elapsedHours);
+            } else if(elapsedHours == 1) {
+                return String.format(Locale.US, "%d hour ago", elapsedHours);
+            }
+
+            if(elapsedMinutes > 1) {
+                return String.format(Locale.US, "%d minutes ago", elapsedMinutes);
+            } else if(elapsedMinutes == 1) {
+                return String.format(Locale.US, "%d minute ago", elapsedMinutes);
+            }
+
+            if(elapsedSeconds > 1) {
+                return String.format(Locale.US, "%d seconds ago", elapsedSeconds);
+            } else {
+                return String.format(Locale.US, "%d second ago", elapsedSeconds);
+            }
         }
 
         @Override
