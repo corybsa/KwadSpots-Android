@@ -12,7 +12,7 @@ public class SearchResult {
     }
 
     public String getImage() {
-        return mImage;
+        return "gs://kwad-spots.appspot.com/images/" + mImage;
     }
 
     public void setImage(String image) {
