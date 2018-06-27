@@ -4,8 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/create_spot_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -141,6 +140,21 @@
                 android:hint="@string/edit_text_spot_comment_hint"
                 android:inputType="textCapSentences|textMultiLine"/>
         </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/create_spot_button"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/create_spot_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spot_comment_layout" />
 
         <ProgressBar
             android:id="@+id/progress_bar"

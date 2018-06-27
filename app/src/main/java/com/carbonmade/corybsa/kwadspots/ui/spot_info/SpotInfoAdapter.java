@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
+import com.carbonmade.corybsa.kwadspots.services.SpotService;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -52,6 +53,10 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
             SpotInfoLoadingViewHolder spotInfoLoadingViewHolder = (SpotInfoLoadingViewHolder)holder;
             spotInfoLoadingViewHolder.progressBar.setVisibility(View.VISIBLE);
             spotInfoLoadingViewHolder.progressBar.setIndeterminate(true);
+
+            if(mData.size() <= SpotService.COMMENT_PAGE_SIZE) {
+                hideProgressBar();
+            }
         }
     }
 
@@ -96,15 +101,14 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
 
     class SpotInfoItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mComment;
-        private TextView mCreatedBy;
-        private TextView mCreatedDate;
+        private TextView mUser;
+        private TextView mDate;
 
         SpotInfoItemViewHolder(View view) {
             super(view);
             mComment = view.findViewById(R.id.spot_info_comments_comment);
-            // TODO: get the actual name of the person who created the comment.
-            mCreatedBy = view.findViewById(R.id.spot_info_comments_name);
-            mCreatedDate = view.findViewById(R.id.spot_info_comments_date);
+            mUser = view.findViewById(R.id.spot_info_comments_name);
+            mDate = view.findViewById(R.id.spot_info_comments_date);
             view.setOnClickListener(this);
         }
 
@@ -112,13 +116,13 @@ public class SpotInfoAdapter extends RecyclerView.Adapter {
             SpotComment comment = mData.get(position);
 
             mComment.setText(comment.getComment());
-            mCreatedBy.setText(comment.getCreatedBy());
-            mCreatedDate.setText(new SimpleDateFormat(SpotComment.DATE_FORMAT, Locale.US).format(comment.getCreatedDate()));
+            mUser.setText(comment.getCreatedBy());
+            mDate.setText(new SimpleDateFormat(SpotComment.DATE_FORMAT, Locale.US).format(comment.getCreatedDate()));
         }
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(mContext, "", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Item clicked", Toast.LENGTH_SHORT).show();
         }
     }
 }

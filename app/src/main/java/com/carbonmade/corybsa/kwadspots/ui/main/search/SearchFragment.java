@@ -93,6 +93,17 @@ public class SearchFragment extends DaggerFragment implements SearchContract.Vie
         fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
         fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
         fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "Savona", "I like to call this the wasteland."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "Angel's place", "Angel loves to host events at his house!"));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
+        fakeData.add(new SearchResult("JPEG_20180626_085647_1625970571241687142.jpg", "The Spot", "This is THE spot."));
 
         setupRecyclerView(fakeData);
     }

@@ -20,6 +20,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class SpotService {
+    public static final int COMMENT_PAGE_SIZE = 20;
+    public static final int SEARCH_RESULT_PAGE_SIZE = 20;
+
     private static final String KEY_REFERENCE = "Storage Reference";
     private static final String COLLECTION_SPOTS = "spots";
     private static final String COLLECTION_COMMENTS = "comments";

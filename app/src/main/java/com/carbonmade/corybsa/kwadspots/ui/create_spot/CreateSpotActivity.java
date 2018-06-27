@@ -15,7 +15,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -38,6 +37,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import dagger.android.support.DaggerAppCompatActivity;
 
 public class CreateSpotActivity extends DaggerAppCompatActivity implements CreateSpotContract.View {
@@ -56,6 +56,11 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     private double mLatitude;
     private double mLongitude;
     private File mSpotImageFile;
+
+    @OnClick(R.id.create_spot_button)
+    void onCreateClicked() {
+        mPresenter.createSpot(mSpotImageFile);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,19 +131,10 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_spots_toolbar, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
                 finish();
-                break;
-            case R.id.action_create:
-                mPresenter.createSpot(mSpotImageFile);
                 break;
         }
 

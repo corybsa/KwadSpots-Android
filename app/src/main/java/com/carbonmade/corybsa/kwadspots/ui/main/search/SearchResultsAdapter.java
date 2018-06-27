@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.SearchResult;
+import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -54,6 +55,10 @@ public class SearchResultsAdapter extends RecyclerView.Adapter {
                 SearchResultLoadingViewHolder searchResultLoadingViewHolder = (SearchResultLoadingViewHolder)holder;
                 searchResultLoadingViewHolder.progressBar.setVisibility(View.VISIBLE);
                 searchResultLoadingViewHolder.progressBar.setIndeterminate(true);
+
+            if(mData.size() <= SpotService.SEARCH_RESULT_PAGE_SIZE) {
+                hideProgressBar();
+            }
         }
     }
 

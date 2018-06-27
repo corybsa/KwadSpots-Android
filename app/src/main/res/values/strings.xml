@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Kwad Spots</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
     <string name="main_tab_home">Home</string>
     <string name="main_tab_search">Search</string>
     <string name="main_tab_spots">Spots</string>
+    <string name="main_tab_profile">Profile</string>
 
     <string name="text_log_in">Log In</string>
     <string name="text_log_out">Log Out</string>
@@ -18,17 +20,18 @@
     <string name="edit_text_password_verify_hint">Verify Password</string>
     <string name="edit_text_spot_name_hint">Spot name</string>
     <string name="edit_text_spot_type_hint">Spot type</string>
+    <string name="edit_text_spot_comment_hint">Comment</string>
 
     <string name="spots_actions_add_photo">Add Photo</string>
     <string name="spots_actions_add_something">Add Another Thing</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="main_tab_profile">Profile</string>
     <string name="password_reset_submit">Send Reset Email</string>
     <string name="password_reset_info">We\'ll need your email so we can send a reset link.</string>
 
     <string name="toolbar_action_create">Create</string>
-    <string name="add_a_picture">Add a picture</string>
-    <string name="edit_text_spot_comment_hint">Comment</string>
-    <string name="spot_picture_description">Spot Image</string>
     <string name="toolbar_action_comment">Add Comment</string>
+
+    <string name="add_a_picture">Add a picture</string>
+    <string name="spot_picture_description">Spot Image</string>
+
+    <string name="create_spot_button">Create Spot</string>
 </resources>
