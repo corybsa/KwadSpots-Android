@@ -3,8 +3,10 @@ package com.carbonmade.corybsa.kwadspots.services;
 import android.os.Bundle;
 
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
+import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -21,9 +23,11 @@ import javax.inject.Inject;
 public class SpotService {
     private static final String KEY_REFERENCE = "Storage Reference";
     private static final String COLLECTION_SPOTS = "spots";
+    private static final String COLLECTION_COMMENTS = "comments";
 
     private StorageReference mStorageReference;
 
+    @Inject FirebaseAuth mFirebaseAuth;
     @Inject FirebaseStorage mFirebaseStorage;
     @Inject FirebaseFirestore mFirestore;
 
@@ -88,10 +92,19 @@ public class SpotService {
         return mFirestore.collection(COLLECTION_SPOTS).document(spotId).delete();
     }
 
+    public Task<DocumentReference> putSpotComment(String spotId, HashMap<String, Object> comment) {
+        comment.put(SpotComment.FIELD_USER, mFirebaseAuth.getCurrentUser());
+
+        return mFirestore.collection(COLLECTION_SPOTS)
+                .document(spotId)
+                .collection(COLLECTION_COMMENTS)
+                .add(comment);
+    }
+
     public Task<QuerySnapshot> getSpotComments(String spotId) {
         Query ref = mFirestore.collection(COLLECTION_SPOTS)
                 .document(spotId)
-                .collection(Spot.COLLECTION_COMMENTS);
+                .collection(COLLECTION_COMMENTS);
 
         return ref.get();
     }

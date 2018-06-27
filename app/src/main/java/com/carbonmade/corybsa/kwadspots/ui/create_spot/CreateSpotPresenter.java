@@ -162,8 +162,8 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
 
         @Override
         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-            mView.showProgress((int)progress, false);
+            int progress = (int)((100 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+            mView.showProgress(progress, false);
         }
     }
 
