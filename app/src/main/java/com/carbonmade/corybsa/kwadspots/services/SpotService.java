@@ -6,7 +6,6 @@ import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -27,7 +26,6 @@ public class SpotService {
 
     private StorageReference mStorageReference;
 
-    @Inject FirebaseAuth mFirebaseAuth;
     @Inject FirebaseStorage mFirebaseStorage;
     @Inject FirebaseFirestore mFirestore;
 
@@ -93,8 +91,6 @@ public class SpotService {
     }
 
     public Task<DocumentReference> putSpotComment(String spotId, HashMap<String, Object> comment) {
-        comment.put(SpotComment.FIELD_USER, mFirebaseAuth.getCurrentUser());
-
         return mFirestore.collection(COLLECTION_SPOTS)
                 .document(spotId)
                 .collection(COLLECTION_COMMENTS)
