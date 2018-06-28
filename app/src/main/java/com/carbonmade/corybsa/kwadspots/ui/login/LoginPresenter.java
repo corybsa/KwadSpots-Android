@@ -27,14 +27,12 @@ final public class LoginPresenter implements LoginContract.Presenter {
         checkUserLoggedIn();
     }
 
-    private void checkUserLoggedIn() {
-        FirebaseUser user = mAuth.getCurrentUser();
-
-        if(user != null) {
-            mView.onLoginSuccess();
-        }
-    }
-
+    /**
+     * Logs the user in with Firebase.
+     *
+     * @param email the email of the user.
+     * @param password the password of the user.
+     */
     @Override
     public void onLoginClicked(String email, String password) {
         if(email.isEmpty()) {
@@ -73,5 +71,16 @@ final public class LoginPresenter implements LoginContract.Presenter {
     @Override
     public void dropView() {
         mView = null;
+    }
+
+    /**
+     * Checks if the user is logged in already.
+     */
+    private void checkUserLoggedIn() {
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        if(user != null) {
+            mView.onLoginSuccess();
+        }
     }
 }

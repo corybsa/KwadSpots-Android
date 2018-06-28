@@ -7,10 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
-import android.support.transition.Fade;
-import android.support.transition.Transition;
-import android.support.transition.TransitionInflater;
-import android.support.transition.TransitionSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,7 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.ui.login.LoginActivity;
@@ -40,8 +35,6 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class MainActivity extends DaggerAppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener, MainContract.View {
     protected static final String KEY_FRAGMENT = "Fragment";
-    private static final long MOVE_DEFAULT_TIME = 1000;
-    private static final long FADE_DEFAULT_TIME = 300;
 
     @BindView(R.id.navigation) BottomNavigationView mBottomNavigationView;
     @BindView(R.id.toolbar) Toolbar mToolbar;

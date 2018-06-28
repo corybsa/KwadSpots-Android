@@ -88,6 +88,11 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
         }
     }
 
+    /**
+     * Loads {@code comments} into the {@link RecyclerView} sets the adapter and the scroll listener.
+     *
+     * @param comments the comments to add to the list view
+     */
     @Override
     public void loadComments(final List<SpotComment> comments) {
         mSpotInfoAdapter = new SpotInfoAdapter(comments);
@@ -102,6 +107,7 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
+                // if the last visible item is the last item in the data set, then load more comments.
                 if(((LinearLayoutManager)manager).findLastVisibleItemPosition() == comments.size()) {
                     mPresenter.loadMore(mSpot.getId());
                 }
@@ -109,6 +115,11 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
         });
     }
 
+    /**
+     * Loads more comments into the {@link RecyclerView}.
+     *
+     * @param comments the comments to add to the list view
+     */
     @Override
     public void loadMore(List<SpotComment> comments) {
         int count = mSpotInfoAdapter.getItemCount();
@@ -122,6 +133,16 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
             mSpotInfoAdapter.notifyDataSetChanged();
             mRecyclerView.scheduleLayoutAnimation();
         }
+    }
+
+    /**
+     * Shows the specified message in an {@link android.support.v7.app.AlertDialog}.
+     *
+     * @param message the message to show.
+     */
+    @Override
+    public void showError(String message) {
+        Helpers.showAlert(this, message);
     }
 
     @Override
@@ -145,10 +166,5 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
         }
 
         return false;
-    }
-
-    @Override
-    public void showError(String message) {
-        Helpers.showAlert(this, message);
     }
 }

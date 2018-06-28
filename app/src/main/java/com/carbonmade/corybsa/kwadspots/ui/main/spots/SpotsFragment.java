@@ -8,11 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,6 +200,11 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
         startActivity(intent);
     }
 
+    /**
+     * Shows the specified message in an {@link android.support.v7.app.AlertDialog}.
+     *
+     * @param message the message to show.
+     */
     @Override
     public void showError(String message) {
         Helpers.showAlert(getActivity(), message);

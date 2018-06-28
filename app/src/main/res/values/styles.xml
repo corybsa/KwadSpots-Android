@@ -17,4 +17,10 @@
         <item name="android:backgroundTint">@color/colorPrimary</item>
     </style>
 
+    <style name="Badge">
+        <item name="android:textColor">#000</item>
+        <item name="android:textSize">@dimen/badge_text_size</item>
+        <item name="android:background">@drawable/badge_background</item>
+    </style>
+
 </resources>

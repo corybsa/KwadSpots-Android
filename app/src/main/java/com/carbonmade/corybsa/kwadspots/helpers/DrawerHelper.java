@@ -20,6 +20,9 @@ import com.squareup.picasso.Picasso;
 
 import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
+/**
+ * A class to help with tedious Drawer stuff.
+ */
 public class DrawerHelper {
     private FirebaseAuth mAuth;
     private Activity mActivity;
@@ -29,6 +32,13 @@ public class DrawerHelper {
         mActivity = activity;
     }
 
+    /**
+     * Populates the {@code navigationView} with the header image, profile image and log out button.
+     * Also sets up click handlers for the items in the {@code navigationView}.
+     *
+     * @param navigationView the view for the navigation
+     * @param drawerLayout the layout for the drawer
+     */
     public void setupDrawerContent(NavigationView navigationView, final DrawerLayout drawerLayout) {
         FirebaseUser user = mAuth.getCurrentUser();
         String headerText = user.getDisplayName();
@@ -55,6 +65,7 @@ public class DrawerHelper {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         String activityName = mActivity.getClass().getSimpleName();
+
                         switch(item.getItemId()) {
                             case R.id.drawer_item_settings:
                                 if(!activityName.equals(SettingsActivity.class.getSimpleName())) {
@@ -80,6 +91,9 @@ public class DrawerHelper {
         });
     }
 
+    /**
+     * Logs out the user and clears all activities from the history stack.
+     */
     private void logOutClicked() {
         mAuth.signOut();
         Intent intent = new Intent(mActivity, LoginActivity.class);

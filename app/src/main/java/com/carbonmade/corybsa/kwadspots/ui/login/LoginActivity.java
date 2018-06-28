@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
 import com.carbonmade.corybsa.kwadspots.R;
+import com.carbonmade.corybsa.kwadspots.ui.main.MainActivity;
 import com.carbonmade.corybsa.kwadspots.ui.password_reset.PasswordResetActivity;
 import com.carbonmade.corybsa.kwadspots.ui.sign_up.SignUpActivity;
 import com.google.firebase.auth.FirebaseAuth;

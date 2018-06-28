@@ -17,7 +17,6 @@ import com.carbonmade.corybsa.kwadspots.services.SpotService;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class SpotInfoAdapter extends RecyclerView.Adapter {
     private final int VIEW_ITEM = 0;

@@ -60,22 +60,9 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
                 .addOnFailureListener(uploadListener)
                 .addOnProgressListener(uploadListener);
     }
-
-    @Override
-    public File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-
-        return File.createTempFile(imageFileName, ".jpg", storageDir);
-    }
-
-    @Override
-    public void createBitmap(File spotImageFile) throws IOException {
-        mSpotBitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), Uri.parse("file:" + spotImageFile.getAbsolutePath()));
-        mView.showThumbnail(mSpotBitmap);
-    }
-
+    /**
+     * Checks for camera permissions and then informs the view that it should open the camera.
+     */
     @Override
     public void pictureClicked() {
         if(ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -99,12 +86,44 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         }
     }
 
+    /**
+     * Creates a temporary image file.
+     *
+     * @return returns a {@link File}.
+     * @throws IOException if the file could not be created.
+     */
+    @Override
+    public File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = mActivity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
+    }
+
+    /**
+     * Converts an image file to a bitmap.
+     *
+     * @param spotImageFile the image file to convert.
+     * @throws IOException
+     */
+    @Override
+    public void createBitmap(File spotImageFile) throws IOException {
+        mSpotBitmap = MediaStore.Images.Media.getBitmap(mActivity.getContentResolver(), Uri.parse("file:" + spotImageFile.getAbsolutePath()));
+        mView.showThumbnail(mSpotBitmap);
+    }
+
+    /**
+     * Compresses the image passed in and then uploads it along with the spot information.
+     * If the image is null then just the spot information will be uploaded.
+     * @param spotImageFile the image file to upload.
+     */
     @Override
     public void createSpot(File spotImageFile) {
         if(spotImageFile != null) {
             new ImageCompresser(spotImageFile.getName()).execute();
         } else {
-            createSpot();
+            uploadSpot();
         }
     }
 
@@ -119,12 +138,10 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         mView = null;
     }
 
-    private void requestCameraPermissions() {
-        String[] permissions = {Manifest.permission.CAMERA};
-        ActivityCompat.requestPermissions(mActivity, permissions, PERMISSION_CAMERA);
-    }
-
-    private void createSpot() {
+    /**
+     * Gets spot information from the view and then inserts it into the database.
+     */
+    private void uploadSpot() {
         HashMap<String, Object> spot = mView.getSpot();
 
         if(!spot.containsKey(Spot.FIELD_NAME) || spot.get(Spot.FIELD_NAME).toString().isEmpty()) {
@@ -149,10 +166,15 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
                 .addOnFailureListener(listener);
     }
 
+    private void requestCameraPermissions() {
+        String[] permissions = {Manifest.permission.CAMERA};
+        ActivityCompat.requestPermissions(mActivity, permissions, PERMISSION_CAMERA);
+    }
+
     class UploadListener implements OnSuccessListener<UploadTask.TaskSnapshot>, OnFailureListener, OnProgressListener<UploadTask.TaskSnapshot> {
         @Override
         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-            createSpot();
+            uploadSpot();
         }
 
         @Override
@@ -179,6 +201,9 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         }
     }
 
+    /**
+     * Class to compress image file in a separate thread.
+     */
     class ImageCompresser extends AsyncTask<Void, Integer, ByteArrayOutputStream> {
         private String mFilename;
 
@@ -201,7 +226,7 @@ final public class CreateSpotPresenter implements CreateSpotContract.Presenter {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            mView.showProgress(values[values.length - 1], true);
+            mView.showProgress(0, true);
         }
 
         @Override

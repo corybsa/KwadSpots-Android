@@ -4,6 +4,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.squareup.moshi.Json;
 
 public class Spot {
+    public static final String FIELD_USER = "user";
     public static final String FIELD_COMMENT = "comment";
     public static final String FIELD_LATITUDE = "latitude";
     public static final String FIELD_LONGITUDE = "longitude";
@@ -36,11 +37,15 @@ public class Spot {
     @Json(name = "type")
     private long mType;
 
+    @Json(name = "user")
+    private String mUser;
+
     public Spot(QueryDocumentSnapshot document) {
         mId = document.getId();
         mComment = document.getString(FIELD_COMMENT);
         mName = document.getString(FIELD_NAME);
         mPicture = document.getString(FIELD_PICTURE);
+        mUser = document.getString(FIELD_USER);
 
         if(document.contains(FIELD_LATITUDE)) {
             mLatitude = document.getDouble(FIELD_LATITUDE);
@@ -91,5 +96,9 @@ public class Spot {
 
     public long getType() {
         return mType;
+    }
+
+    public String getUser() {
+        return mUser;
     }
 }

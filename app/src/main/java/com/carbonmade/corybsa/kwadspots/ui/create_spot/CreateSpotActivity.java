@@ -28,6 +28,7 @@ import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.helpers.Helpers;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsPresenter;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +52,7 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     @BindView(R.id.spot_comment) TextInputEditText mSpotComment;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
 
+    @Inject FirebaseAuth mFirebaseAuth;
     @Inject CreateSpotPresenter mPresenter;
 
     private double mLatitude;
@@ -120,17 +122,6 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == CreateSpotPresenter.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            try {
-                mPresenter.createBitmap(mSpotImageFile);
-            } catch (IOException e) {
-                // ignore for now
-            }
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case android.R.id.home:
@@ -142,46 +133,19 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
     }
 
     @Override
-    public void showThumbnail(Bitmap spotBitmap) {
-        mSpotPictureHint.setVisibility(View.GONE);
-        mSpotPicture.setImageBitmap(spotBitmap);
-    }
-
-    @Override
-    public void showProgress(int progress, boolean indeterminate) {
-        mProgressBar.setVisibility(View.VISIBLE);
-        mProgressBar.setIndeterminate(indeterminate);
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            mProgressBar.setProgress(progress, true);
-        } else {
-            mProgressBar.setProgress(progress);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == CreateSpotPresenter.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            try {
+                mPresenter.createBitmap(mSpotImageFile);
+            } catch (IOException e) {
+                // ignore for now
+            }
         }
     }
 
-    @Override
-    public void showError(String message) {
-        Helpers.showAlert(this, message);
-    }
-
-    @Override
-    public HashMap<String, Object> getSpot() {
-        HashMap<String, Object> spot = new HashMap<>();
-
-        if(mSpotImageFile != null) {
-            spot.put(Spot.FIELD_PICTURE, mSpotImageFile.getName());
-        }
-
-        spot.put(Spot.FIELD_NAME, mSpotName.getText().toString());
-        spot.put(Spot.FIELD_TYPE, mSpotType.getSelectedItemPosition());
-        spot.put(Spot.FIELD_RATING, mSpotRating.getRating());
-        spot.put(Spot.FIELD_COMMENT, mSpotComment.getText().toString());
-        spot.put(Spot.FIELD_LATITUDE, mLatitude);
-        spot.put(Spot.FIELD_LONGITUDE, mLongitude);
-
-        return spot;
-    }
-
+    /**
+     * Opens the camera and saves the image taken as a temporary file.
+     */
     @Override
     public void openCamera() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -209,5 +173,68 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
                 startActivityForResult(takePictureIntent, CreateSpotPresenter.REQUEST_IMAGE_CAPTURE);
             }
         }
+    }
+
+    /**
+     * Display thumbnail of image that was taken by the user.
+     *
+     * @param spotBitmap the bitmap to show.
+     */
+    @Override
+    public void showThumbnail(Bitmap spotBitmap) {
+        mSpotPictureHint.setVisibility(View.GONE);
+        mSpotPicture.setImageBitmap(spotBitmap);
+    }
+
+    /**
+     * Organize spot information into a {@link HashMap} using fields specified in {@link Spot}.
+     *
+     * @return returns a {@link HashMap} appropriate for insertion into the Firestore.
+     */
+    @Override
+    public HashMap<String, Object> getSpot() {
+        HashMap<String, Object> spot = new HashMap<>();
+
+        if(mSpotImageFile != null) {
+            spot.put(Spot.FIELD_PICTURE, mSpotImageFile.getName());
+        }
+
+        spot.put(Spot.FIELD_USER, mFirebaseAuth.getCurrentUser().getEmail());
+        spot.put(Spot.FIELD_NAME, mSpotName.getText().toString());
+        spot.put(Spot.FIELD_TYPE, mSpotType.getSelectedItemPosition());
+        spot.put(Spot.FIELD_RATING, mSpotRating.getRating());
+        spot.put(Spot.FIELD_COMMENT, mSpotComment.getText().toString());
+        spot.put(Spot.FIELD_LATITUDE, mLatitude);
+        spot.put(Spot.FIELD_LONGITUDE, mLongitude);
+
+        return spot;
+    }
+
+    /**
+     * Display progress. If {@code indeterminate} is {@code true} then {@code progress} is ignored.
+     *
+     * @param progress the percentage of progress.
+     * @param indeterminate whether to show indeterminate or not.
+     */
+    @Override
+    public void showProgress(int progress, boolean indeterminate) {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar.setIndeterminate(indeterminate);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mProgressBar.setProgress(progress, true);
+        } else {
+            mProgressBar.setProgress(progress);
+        }
+    }
+
+    /**
+     * Shows the specified message in an {@link android.support.v7.app.AlertDialog}.
+     *
+     * @param message the message to show.
+     */
+    @Override
+    public void showError(String message) {
+        Helpers.showAlert(this, message);
     }
 }
