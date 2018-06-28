@@ -70,6 +70,7 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
             if(actionBar != null) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setTitle(mSpot.getName());
+                actionBar.setSubtitle(mSpot.getUser());
             }
 
             mPresenter.takeView(this);
