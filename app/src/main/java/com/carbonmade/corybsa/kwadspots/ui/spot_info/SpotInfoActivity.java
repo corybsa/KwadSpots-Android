@@ -6,7 +6,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.datamodels.SpotComment;
+import com.carbonmade.corybsa.kwadspots.helpers.Helpers;
 import com.carbonmade.corybsa.kwadspots.services.SpotService;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 import com.squareup.moshi.Moshi;
@@ -149,10 +149,6 @@ public class SpotInfoActivity extends DaggerAppCompatActivity implements SpotInf
 
     @Override
     public void showError(String message) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton("Ok", null)
-                .create()
-                .show();
+        Helpers.showAlert(this, message);
     }
 }

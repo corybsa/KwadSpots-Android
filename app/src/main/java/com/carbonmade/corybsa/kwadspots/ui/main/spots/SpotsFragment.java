@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
 import com.carbonmade.corybsa.kwadspots.di.ActivityScoped;
+import com.carbonmade.corybsa.kwadspots.helpers.Helpers;
 import com.carbonmade.corybsa.kwadspots.ui.create_spot.CreateSpotActivity;
 import com.carbonmade.corybsa.kwadspots.ui.spot_info.SpotInfoActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -201,11 +202,7 @@ public class SpotsFragment extends DaggerFragment implements OnMapReadyCallback,
 
     @Override
     public void showError(String message) {
-        new android.support.v7.app.AlertDialog.Builder(requireActivity())
-                .setMessage(message)
-                .setPositiveButton("Ok", null)
-                .create()
-                .show();
+        Helpers.showAlert(getActivity(), message);
     }
 
     @Override

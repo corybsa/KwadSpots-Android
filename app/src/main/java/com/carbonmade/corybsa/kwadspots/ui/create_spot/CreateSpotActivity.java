@@ -13,7 +13,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.TextView;
 
 import com.carbonmade.corybsa.kwadspots.R;
 import com.carbonmade.corybsa.kwadspots.datamodels.Spot;
+import com.carbonmade.corybsa.kwadspots.helpers.Helpers;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsFragment;
 import com.carbonmade.corybsa.kwadspots.ui.main.spots.SpotsPresenter;
 
@@ -161,11 +161,7 @@ public class CreateSpotActivity extends DaggerAppCompatActivity implements Creat
 
     @Override
     public void showError(String message) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setPositiveButton("Ok", null)
-                .create()
-                .show();
+        Helpers.showAlert(this, message);
     }
 
     @Override
